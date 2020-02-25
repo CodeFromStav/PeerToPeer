@@ -1,3 +1,5 @@
+package chat;
+
 class ObjectArray
 {
     //Need to be able to append a new Node Object to Object Array

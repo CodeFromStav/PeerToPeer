@@ -1,1 +1,0 @@
-//Establish type of message, so we can check message codes in message.java
