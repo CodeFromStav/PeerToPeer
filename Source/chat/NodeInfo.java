@@ -15,11 +15,12 @@ class ObjectArray extends ChatNode
 
     getNodeInfo(int info)
     {
+        
 
     }
 
     updateNodeList( int chatNode )
     {
-        
+
     }
 }

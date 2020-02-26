@@ -12,9 +12,10 @@ public class Message extends MessageTypes
 
     public int getType()
     {
-        if( )
+        
 
     }
+
     //shouldn't this be type string, not void?
     public String setContent( String messageCode)
     {
@@ -41,23 +42,6 @@ public class Message extends MessageTypes
 
         }
 
-
-        if ( message == 100 )
-        {
-            //broadcast join req message
-        }
-        else if( message == 101 )
-        {
-            //broadcast message joined
-        }
-        else if( message = 105 )
-        {
-            //broadcast leave message
-        }
-        else if( message = 110 )
-        {
-
-        }
 
     }
 

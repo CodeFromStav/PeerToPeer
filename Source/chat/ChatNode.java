@@ -19,6 +19,8 @@ public class ChatNode
     public chatNode() //constructor
     {
         //initialize class attributes
+        String nodeName;
+
     }
 
     // public void main(String[] args)
@@ -31,7 +33,7 @@ public class ChatNode
 
     public void checkConnection()
     {
-        
+            
     }
 
     public void updateMesh()
