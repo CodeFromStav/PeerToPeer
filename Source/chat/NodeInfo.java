@@ -13,13 +13,14 @@ class ObjectArray extends ChatNode
     //     nodeInfo[3] = new Node();
     // }
 
+
     getNodeInfo(int info)
     {
         
 
     }
 
-    updateNodeList( int chatNode )
+    public static void updateNodeList()
     {
 
     }
