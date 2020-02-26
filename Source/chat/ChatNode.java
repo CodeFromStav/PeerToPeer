@@ -12,7 +12,7 @@ package chat;
 
 //Switch statement using codes for each type of message (using message codes)
 
-public class chatNode
+public class ChatNode
 {
     //create class attributes
 
@@ -21,11 +21,11 @@ public class chatNode
         //initialize class attributes
     }
 
-    public void main(String[] args)
-    {
-        chatNode myObject = new chatNode(); //creates an object of class chatNode
+    // public void main(String[] args)
+    // {
+    //     chatNode myObject = new chatNode(); //creates an object of class chatNode
 
-    }
+    // }
 
 
 
