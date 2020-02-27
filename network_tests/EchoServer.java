@@ -5,7 +5,7 @@ public class EchoServer {
     public static void main(String[] args) throws Exception {
         try {
             // create Inet address object
-            InetAddress addr = InetAddress.getByName("127.0.0.2");
+            InetAddress addr = InetAddress.getByName("127.0.0.255");
             // open new ServerSocket object with port number '8080'
             ServerSocket server = new ServerSocket(8080,50,addr);
             // counter variable for tracking the number of client connections
@@ -30,5 +30,5 @@ public class EchoServer {
             System.out.println(ex);
         }
     }
-    
+
 }
