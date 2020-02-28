@@ -13,6 +13,7 @@ public class Node
         //NodeInfo
         IPAddress ip = new IPAddress( "127.0.0.1" );
         nodeIP = initializeNode(ip);
+        System.out.println(nodeIP.toString());
         startReceiver(nodeIP);
         startSender();
     }
@@ -51,15 +52,11 @@ public class Node
         if ( ip != null )
         {
             String ipString = ip.toString();
-            InetAddress address = InetAddress.getByName(ipString);
             try
             {
+                InetAddress address = InetAddress.getByName(ipString);
                 /*If the node is serving on localhost, it is the first node in the
                 chat app*/
-                if (ipString == "127.0.0.1")
-                {
-                    System.out.println("Chatnode 1 started...");
-                }
             }
             catch (Exception ex)
             {
@@ -97,8 +94,8 @@ public class Node
         return ipString == "127.255.255.250";
     }
 
-    private static void StartSender()
+    private static void startSender()
     {
-        
+
     }
 }
