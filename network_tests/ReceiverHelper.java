@@ -13,12 +13,18 @@ public class ReceiverHelper implements Runnable
         try
         {
             ObjectInputStream fromNode = new ObjectInputStream( currentSocket.getInputStream() );
-            System.out.println( "Hey there you little fuck" );
+            /*
+            * Implementation of the switch statement of message codes. object input stream should
+            * be able to grab the message class's getCode() method to find out which type of message it is
+            * 
+            *
+            *
+            */
             fromNode.close();
         }
         catch ( IOException ex )
         {
-            System.out.println( ex );
+            //System.out.println( ex );
         }
     }
 
@@ -27,7 +33,7 @@ public class ReceiverHelper implements Runnable
     {
         if (currentThread == null)
         {
-            currentThread = new Thread(this);
+            currentThread = new Thread( this );
             currentThread.start();
         }
     }

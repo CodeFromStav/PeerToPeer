@@ -33,7 +33,7 @@ public class Receiver implements Runnable
             }
             catch ( Exception ex )
             {
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
         }
     }
