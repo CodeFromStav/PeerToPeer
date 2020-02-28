@@ -25,7 +25,9 @@ public class Node
                 System.out.println( "server is down, initializing..." );
                 IPAddress local = new IPAddress( "127.0.0.1" );
                 nodeID = assignID(ipString);
-                /*Adds the first value to the ArrayList*/
+                /*Adds the first value to the ArrayList. Cool thing is,
+                no matter how many nodes join the mesh, only one reference
+                to a chatMesh will exist.*/
                 chatMesh = new NodeInfo();
                 chatMesh.update(this);
                 return local;
@@ -40,7 +42,8 @@ public class Node
                 nodeID = assignID(availableIP.toString());
                 return availableIP;
             }
-            catch ( Exception ex ) {
+            catch ( Exception ex )
+            {
                 System.out.println( "IP-" + ipString + "-is not on network." );
                 ip.incrementIP();
             }
