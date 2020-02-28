@@ -4,24 +4,15 @@ import java.io.*;
 /* Test class to verify server-client connection functionality */
 public class Node
 {
-    public static IPAddress nodeIP;
-    public static NodeInfo chatMesh;
-    public static Socket nodeSocket;
-
-    public static void main(String[] args) throws Exception
-    {
-        //NodeInfo
-        IPAddress ip = new IPAddress( "127.0.0.1" );
-        nodeIP = initializeNode(ip);
-        System.out.println(nodeIP.toString());
-        startReceiver(nodeIP);
-        startSender();
-    }
+    private String nodeID;
+    private IPAddress nodeIP;
+    private NodeInfo chatMesh;
+    private Socket nodeSocket;
 
     /*Returns IP that the node is able to use for its connection information
     and also opens up a socket connection with an available node on the network
     to retrieve its nodeInfo for future communications in the mesh*/
-    private static IPAddress initializeNode(IPAddress ip) throws Exception
+    private IPAddress initializeNode(IPAddress ip) throws Exception
     {
         while (true)
         {
@@ -33,6 +24,9 @@ public class Node
                 System.out.println(ipString);
                 System.out.println( "server is down, initializing..." );
                 IPAddress local = new IPAddress( "127.0.0.1" );
+                nodeID = assignID(ipString);
+                /*Adds the first value to the ArrayList*/
+                chatMesh.update(this);
                 return local;
             }
             try
@@ -42,6 +36,7 @@ public class Node
                 node to take*/
                 ip.incrementIP();
                 IPAddress availableIP = findAvailableIP(ip);
+                nodeID = assignID(availableIP.toString());
                 return availableIP;
             }
             catch ( Exception ex ) {
@@ -52,7 +47,7 @@ public class Node
         }
     }
 
-    private static void startReceiver(IPAddress ip) throws Exception
+    private void startReceiver(IPAddress ip) throws Exception
     {
         /*if server is not full...*/
         if ( ip != null )
@@ -72,7 +67,7 @@ public class Node
         }
     }
 
-    private static IPAddress findAvailableIP( IPAddress ip ) throws Exception
+    private IPAddress findAvailableIP( IPAddress ip ) throws Exception
     {
         while (true)
         {
@@ -100,13 +95,22 @@ public class Node
     }
     /*Assumption: the highest ip on the local host subnet that can be accessed is
     127.0.10.250*/
-    private static boolean checkSubnetMax( String ipString )
+    private boolean checkSubnetMax( String ipString )
     {
         return ipString.equals("127.0.10.250");
     }
 
-    private static void startSender()
+    private void startSender(Socket inSocket, int msgCode)
     {
-
+        Sender currSender = new Sender( inSocket,msgCode );
+        Sender.start();
+    }
+    private String assignID(String ipString)
+    {
+        return "Node-" + ipString.hashCode();
+    }
+    public void setIP(IPAddress ip)
+    {
+        nodeIP = initializeNode(ip);
     }
 }
