@@ -26,6 +26,7 @@ public class Node
                 IPAddress local = new IPAddress( "127.0.0.1" );
                 nodeID = assignID(ipString);
                 /*Adds the first value to the ArrayList*/
+                chatMesh = new NodeInfo();
                 chatMesh.update(this);
                 return local;
             }
@@ -47,7 +48,7 @@ public class Node
         }
     }
 
-    private void startReceiver(IPAddress ip) throws Exception
+    public void startReceiver(IPAddress ip) throws Exception
     {
         /*if server is not full...*/
         if ( ip != null )
@@ -100,17 +101,21 @@ public class Node
         return ipString.equals("127.0.10.250");
     }
 
-    private void startSender(Socket inSocket, int msgCode)
+    public void startSender(Socket inSocket, int msgCode)
     {
-        Sender currSender = new Sender( inSocket,msgCode );
-        Sender.start();
+        Sender nodeSender = new Sender( inSocket,msgCode );
+        nodeSender.start();
     }
     private String assignID(String ipString)
     {
         return "Node-" + ipString.hashCode();
     }
-    public void setIP(IPAddress ip)
+    public void setIP(IPAddress ip) throws Exception
     {
         nodeIP = initializeNode(ip);
+    }
+    public IPAddress getIP()
+    {
+        return nodeIP;
     }
 }
