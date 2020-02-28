@@ -16,14 +16,21 @@ public class Receiver implements Runnable {
     public void run() {
         while (true)
         {
-            InetAddress nodeAddress = InetAddress.getByName(nodeIP.toString());
-            ServerSocket server = new ServerSocket(8080,50,nodeAddress);
-            while (true)
+            try
             {
-                Socket serverClient = server.accept();
-                System.out.println("Someone is trying to message");
-                ReceiverHelper inMessage = new ReceiverHelper(serverClient);
-                inMessage.start();
+                InetAddress nodeAddress = InetAddress.getByName(nodeIP.toString());
+                ServerSocket server = new ServerSocket(8080,50,nodeAddress);
+                while (true)
+                {
+                    Socket serverClient = server.accept();
+                    System.out.println("Someone is trying to message");
+                    ReceiverHelper inMessage = new ReceiverHelper(serverClient);
+                    inMessage.start();
+                }
+            }
+            catch ( Exception ex )
+            {
+                ex.printStackTrace();
             }
         }
     }
