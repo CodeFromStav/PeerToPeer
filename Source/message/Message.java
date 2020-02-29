@@ -39,6 +39,7 @@ public class Message extends MessageTypes
             outputStr = nodeName + " message: " + message( ChatNode );
             break;
 
+            return outputStr;
 
         }
 
@@ -47,7 +48,7 @@ public class Message extends MessageTypes
 
     public String getContent()
     {
-
+        //return setContent( messageCode ) ;
     }
 
 
