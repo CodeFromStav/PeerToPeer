@@ -8,6 +8,6 @@ public class StartNode
         newNode.startReceiver(newNode.getIP());
         /*Node starts sender with the "send" message code so that user can
         input messages into the console*/
-        newNode.startSender(null, 110);
+        newNode.startSender(110);
     }
 }

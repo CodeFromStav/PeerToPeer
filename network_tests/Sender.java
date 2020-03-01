@@ -1,20 +1,33 @@
 import java.net.*;
 import java.io.*;
 
-public class Sender extends Node implements Runnable
+public class Sender extends MessageTypes implements Runnable
 {
-    private int msgCode;
-    private Socket inSocket;
     private Thread currentThread;
-
-    public Sender( Socket inSocket, int msgCode )
+    private int msgCode;
+    private Message currentMessage;
+    private NodeInfo chatMesh;
+    public Sender(int msgCode)
     {
         this.msgCode = msgCode;
-        this.inSocket = inSocket;
     }
 
     public void run()
     {
+        while (currentMessage.getCode() != LEAVE_CODE)
+        {
+            switch (msgCode)
+            {
+                case JOIN_CODE:
+                    break;
+                case JOINED_CODE:
+                    break;
+                case NOTE_CODE:
+                    break;
+                case LEAVE_CODE:
+                    break;
+            }
+        }
 
     }
 

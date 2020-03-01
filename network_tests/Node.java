@@ -111,9 +111,9 @@ public class Node
         return ipString.equals("127.0.10.250");
     }
 
-    public void startSender(Socket inSocket, int msgCode)
+    public void startSender(int msgCode)
     {
-        Sender nodeSender = new Sender( inSocket,msgCode );
+        Sender nodeSender = new Sender( msgCode );
         nodeSender.start();
     }
     private String assignID(String ipString)
