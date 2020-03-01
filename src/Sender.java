@@ -5,6 +5,9 @@ import java.util.*;
 // Class necessary for sending messages to different Nodes
 public class Sender extends Message implements Runnable
 {
+    // Boolean for breaking run() while() loop
+    private boolean socketClosed = false;
+
     // Local private variables used within constructor
     private InetAddress IPAddress;
     private String username;
@@ -24,6 +27,7 @@ public class Sender extends Message implements Runnable
     @Override
     public void run()
     {
+        // Variables needed for constructing messages sent from Nodes
         String nodeMessage;
         Scanner messageScanner;
         String[] nodeMessageSplit;
@@ -37,14 +41,10 @@ public class Sender extends Message implements Runnable
         String messageType;
 
         // Variables necessary for different parts of message contents
-        InetAddress messageIP;
-        String messageUsername;
-        DatagramSocket messageDatagramSocket;
-        int messagePortNumber;
         String messageNote;
-        int nodePosition;
 
-        while(true)
+        // Continue to loop until socket is closed
+        while(!socketClosed)
             try
             {
                 // Scan in Node's message and store result
@@ -63,7 +63,7 @@ public class Sender extends Message implements Runnable
 
                 // Switch to handle different message types
                 //      Necessary since the contents of the messages vary
-                //      Template of each message type is specified in switch statement
+                //      Template of each message type is specified when used in switch statement
                 switch(newMessage.getMessageCode())
                 {
                     case (JOIN_CODE):
@@ -95,6 +95,7 @@ public class Sender extends Message implements Runnable
                         // Add an entry to the NodeInfo ArrayList<Node> for the new node
                         NodeInfo.createNodeEntry(newNode);
 
+                        // Purposely omit "break" statement here to force JOINED_CODE case...
 
                     case (JOINED_CODE):
 
@@ -109,17 +110,17 @@ public class Sender extends Message implements Runnable
                         byte[] bufferJoined = nodeMessage.getBytes();
 
                         // Iterate through ArrayList<Node> so that each node receives the message
-                        for(int index = 1; index <= NodeInfo.getArrayListSize(); index++)
+                        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
                         {
                             // Creating DatagramPacket to send to each node
                             DatagramPacket datagramJoined = new DatagramPacket(
                                     bufferJoined,
                                     bufferJoined.length,
-                                    NodeInfo.getIPAddress(index-1),
-                                    NodeInfo.getPortNumber(index-1));
+                                    NodeInfo.getIPAddress(index),
+                                    NodeInfo.getPortNumber(index));
 
                             // Send command for DatagramSockets
-                            NodeInfo.getDatagramSocket(index-1).send(datagramJoined);
+                            NodeInfo.getDatagramSocket(index).send(datagramJoined);
                         }
 
                         break;
@@ -139,21 +140,49 @@ public class Sender extends Message implements Runnable
                         byte[] bufferNote = nodeMessage.getBytes();
 
                         // Iterate through ArrayList<Node> so that each node receives the message
-                        for(int index = 1; index <= NodeInfo.getArrayListSize(); index++)
+                        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
                         {
                             // Creating DatagramPacket to send to each node
                             DatagramPacket datagramNote = new DatagramPacket(
                                     bufferNote,
                                     bufferNote.length,
-                                    NodeInfo.getIPAddress(index-1),
-                                    NodeInfo.getPortNumber(index-1));
+                                    NodeInfo.getIPAddress(index),
+                                    NodeInfo.getPortNumber(index));
 
                             // Send command for DatagramSockets
-                            NodeInfo.getDatagramSocket(index-1).send(datagramNote);
+                            NodeInfo.getDatagramSocket(index).send(datagramNote);
                         }
                         break;
 
                     case (LEAVE_CODE):
+
+                        // Deleting Node from NodeInfo ArrayList<Node> based on port number
+                        NodeInfo.deleteNodeEntry(portNumber);
+
+                        // Create message to send to each node
+                        nodeMessage = username + " is leaving the chat!";
+
+                        // Convert message into byte form
+                        byte[] bufferLeave = nodeMessage.getBytes();
+
+                        // Iterate through ArrayList<Node> so that each node receives the message
+                        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
+                        {
+                            // Creating DatagramPacket to send to each node
+                            DatagramPacket datagramLeave = new DatagramPacket(
+                                    bufferLeave,
+                                    bufferLeave.length,
+                                    NodeInfo.getIPAddress(index),
+                                    NodeInfo.getPortNumber(index));
+
+                            // Send command for DatagramSockets
+                            NodeInfo.getDatagramSocket(index-1).send(datagramLeave);
+                        }
+
+                        // Set socketClosed boolean to true to signify that the socket is closed
+                        socketClosed = true;
+
+                        // Close the socket
                         socket.close();
                         break;
                 }

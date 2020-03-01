@@ -2,6 +2,8 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
+// Class necessary for creating Node Objects
+//      Also houses main() method
 public class Node
 {
     // Static NodeInfo object that can be updated real time
@@ -115,6 +117,10 @@ public class Node
 
         // Create a new Receiver Thread object using user's IP, socket and port number
         Thread receiverThread = new Thread(new Receiver(userIP, nodeSocket, portNumber));
+
+        // Warning to new nodes to join first
+        // Note: this is not enforced! Assume user is not a monkey and follows the directions
+        System.out.println("\nNew users need to 'join' first!");
 
         // Spawn a thread for reading messages
         receiverThread.start();

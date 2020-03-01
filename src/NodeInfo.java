@@ -1,7 +1,7 @@
-import java.io.*;
 import java.net.*;
 import java.util.*;
 
+// Class necessary for keeping track of all Node info within an ArrayList<>
 public class NodeInfo
 {
     // Static ArrayList<Node> so that static methods can be used outside of NodeInfo.java
@@ -11,6 +11,23 @@ public class NodeInfo
     static void createNodeEntry(Node newNode)
     {
         nodeInfoArrayList.add(newNode);
+    }
+
+    // Method for deleting a Node entry within the ArrayList<Node>
+    static void deleteNodeEntry(int portNumber)
+    {
+        // Iterate through ArrayList<Node> to find Node that is leaving
+        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
+        {
+            // Store current node
+            Node node = nodeInfoArrayList.get(index);
+
+            // Comparing Port numbers to find the matching Node
+            if(portNumber == node.getPortNumber())
+            {
+                nodeInfoArrayList.remove(index);
+            }
+        }
     }
 
     // Getter method to return ArrayList<Node> size

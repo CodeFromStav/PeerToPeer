@@ -3,7 +3,6 @@ import java.io.*;
 // Class necessary for creating message based on "type" input by node
 public class Message extends MessageTypes implements Serializable
 {
-    private String messageType;
     private String[] messageContents;
     private int messageCode;
 

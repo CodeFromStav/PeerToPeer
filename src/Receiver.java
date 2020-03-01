@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 
+// Class necessary for printing out received messages to terminal/cmd
 public class Receiver implements Runnable
 {
     // Static int that determines the max length of a buffer
@@ -19,29 +20,40 @@ public class Receiver implements Runnable
         this.portNumber = portNumber;
     }
 
+    // Run method necessary for classes that implement "Runnable"
     @Override
     public void run()
     {
+        String receivedMessage;
+
+        // Continue to loop until break is hit in the catch block
         while(true)
         {
-            byte[] buffer = new byte[Receiver.MAX_LEN];
 
-            DatagramPacket datagram = new DatagramPacket(buffer,buffer.length, IPAddress, portNumber);
+            // Create buffer of MAX_LEN
+            byte[] bufferReceiver = new byte[Receiver.MAX_LEN];
 
-            String message;
+            // Creating a DatagramPacket to send back to the Node
+            DatagramPacket datagramReceived = new DatagramPacket(bufferReceiver, bufferReceiver.length,
+                    IPAddress, portNumber);
 
             try
             {
-                socket.receive(datagram);
-                message = new String(buffer,0,datagram.getLength(),"UTF-8");
+                // Getting Datagram sent by socket
+                socket.receive(datagramReceived);
 
-                System.out.println(message);
+                // Convert the Datagram object into a String object
+                receivedMessage = new String(bufferReceiver, 0, datagramReceived.getLength(),
+                        "UTF-8");
+
+                // Print the received message to the screen
+                System.out.println(receivedMessage);
             }
 
             // Catch statement for when the while loop terminates because the socket closed
             catch(IOException e)
             {
-                System.out.println("Socket closed!");
+                System.out.println("You have left the chat; socket closed!");
                 break;
             }
         }
