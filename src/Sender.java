@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.*;
 
 // Class necessary for sending messages to different Nodes
-public class Sender implements Runnable
+public class Sender extends Message implements Runnable
 {
     // Local private variables used within constructor
     private InetAddress IPAddress;
@@ -27,6 +27,8 @@ public class Sender implements Runnable
         String nodeMessage;
         Scanner messageScanner;
         String[] nodeMessageSplit;
+
+        // Variables necessary for Message constructor
         String messageType;
 
         while(true)
@@ -41,8 +43,10 @@ public class Sender implements Runnable
                 // Seperate nodeMessage input which is <hostname>/<ipaddress>
                 nodeMessageSplit = nodeMessage.split(",");
 
-                // Assigning to the user's IP Address
+                // Assigning variable to the node's IP Address
                 messageType = nodeMessageSplit[0];
+
+                Message newMessage = new Message(messageType.toLowerCase(), nodeMessageSplit);
 
                 if(nodeMessage.equalsIgnoreCase("exit"))
                 {
