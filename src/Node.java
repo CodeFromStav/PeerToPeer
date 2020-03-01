@@ -32,25 +32,14 @@ public class Node
                 // Spawn a thread for reading messages
                 t.start();
 
+                socket.joinGroup(group);
+                Thread t = new Thread(new Sender(socket,group,port));
+
+                // Spawn a thread for reading messages
+                t.start();
+
                 // sent to the current group
                 System.out.println("Start typing messages...\n");
-                while(true)
-                {
-                    String message;
-                    message = sc.nextLine();
-                    if(message.equalsIgnoreCase(Node.TERMINATE))
-                    {
-                        finished = true;
-                        socket.leaveGroup(group);
-                        socket.close();
-                        break;
-                    }
-                    message = name + ": " + message;
-                    byte[] buffer = message.getBytes();
-                    DatagramPacket datagram = new
-                            DatagramPacket(buffer,buffer.length,group,port);
-                    socket.send(datagram);
-                }
             }
             catch(SocketException se)
             {
