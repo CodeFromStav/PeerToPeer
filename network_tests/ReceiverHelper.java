@@ -4,6 +4,7 @@ public class ReceiverHelper implements Runnable
 {
     Thread currentThread;
     Socket currentSocket;
+    Message currentMessage;
     ReceiverHelper( Socket inSocket )
     {
         currentSocket = inSocket;
@@ -16,7 +17,7 @@ public class ReceiverHelper implements Runnable
             /*
             * Implementation of the switch statement of message codes. object input stream should
             * be able to grab the message class's getCode() method to find out which type of message it is
-            * 
+            *
             *
             *
             */
