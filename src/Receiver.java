@@ -37,9 +37,12 @@ public class Receiver implements Runnable
 
                 System.out.println(message);
             }
+
+            // Catch statement for when the while loop terminates because the socket closed
             catch(IOException e)
             {
                 System.out.println("Socket closed!");
+                break;
             }
         }
     }

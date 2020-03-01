@@ -8,7 +8,7 @@ public class NodeInfo
     private static ArrayList<Node> nodeInfoArrayList = new ArrayList();
 
     // Method for creating a new entry within the ArrayList<Node> with a Node
-    void createNodeEntry(Node newNode)
+    static void createNodeEntry(Node newNode)
     {
         nodeInfoArrayList.add(newNode);
     }

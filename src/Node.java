@@ -4,12 +4,10 @@ import java.util.*;
 
 public class Node
 {
-    // Static int to keep consistent record of number of nodes for NodeInfo ArrayList<Node>
-    static volatile int nodeNumber = 1;
-
     // Static NodeInfo object that can be updated real time
     static volatile NodeInfo nodeInfo = null;
 
+    // Information/variables necessary to create a Node object
     private InetAddress IPAddress;
     private String username;
     private DatagramSocket socket;
@@ -51,6 +49,7 @@ public class Node
     // Main; driver for project
     public static void main(String[] args) throws IOException {
 
+        // Variables necessary for gathering user input
         Scanner userInput;
         String userHostname;
         InetAddress userIP;
@@ -105,11 +104,6 @@ public class Node
             // Add Node to NodeInfo class (ArrayList<Node>)
             nodeInfo.createNodeEntry(newNode);
         }
-        else
-        {
-            // Create new Node object with data supplied by user
-            Node newNode = new Node(userIP, username, nodeSocket, portNumber);
-        }
 
         // Node creation confirmation
         System.out.println("\nYour node has been created!");
@@ -117,7 +111,7 @@ public class Node
         // Layout for 3 types of message: Join, Leave, Note
         //      Join message is required for new nodes
         System.out.println("Here is the format for each type of message (entered without quotes):" +
-                        "\n    Join: 'join'\n    Leave: 'exit'\n    Note: 'note,<yournote>'");
+                        "\n    Join: 'join'\n    Leave: 'leave'\n    Note: 'note,<yournote>'");
 
         // Create a new Receiver Thread object using user's IP, socket and port number
         Thread receiverThread = new Thread(new Receiver(userIP, nodeSocket, portNumber));
@@ -128,7 +122,7 @@ public class Node
         // Create a new Sender Thread object using user's IP, username, Socket and port#
         Thread senderThread = new Thread(new Sender(userIP, username, nodeSocket, portNumber));
 
-        // Spawn a thread for reading messages
+        // Spawn a thread for sending messages
         senderThread.start();
 
         // Let the user know that they can start sending messages
