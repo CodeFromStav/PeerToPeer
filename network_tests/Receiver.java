@@ -9,9 +9,12 @@ public class Receiver implements Runnable
     // socket associated with client's connection
     IPAddress nodeIP;
 
-    Receiver(IPAddress ip)
+    Node currentNode;
+
+    Receiver(IPAddress ip, Node currentNode)
     {
         nodeIP = ip;
+        this.currentNode = currentNode;
     }
     /* Runnable portion of the class, opens up a connection between the client and
     server */
@@ -27,7 +30,7 @@ public class Receiver implements Runnable
                 {
                     Socket serverClient = server.accept();
                     System.out.println("Someone is trying to message");
-                    ReceiverHelper inMessage = new ReceiverHelper(serverClient);
+                    ReceiverHelper inMessage = new ReceiverHelper(serverClient,currentNode);
                     inMessage.start();
                 }
             }

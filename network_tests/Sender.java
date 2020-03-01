@@ -4,19 +4,19 @@ import java.io.*;
 public class Sender extends MessageTypes implements Runnable
 {
     private Thread currentThread;
-    private int msgCode;
     private Message currentMessage;
-    private NodeInfo chatMesh;
-    public Sender(int msgCode)
+    private Node inNode;
+    public Sender(Message currentMessage, Node inNode)
     {
-        this.msgCode = msgCode;
+        this.currentMessage = currentMessage;
+        this.inNode = inNode;
     }
 
     public void run()
     {
         while (currentMessage.getCode() != LEAVE_CODE)
         {
-            switch (msgCode)
+            switch (currentMessage.getCode())
             {
                 case JOIN_CODE:
                     break;

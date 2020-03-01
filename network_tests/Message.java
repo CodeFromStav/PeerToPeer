@@ -4,30 +4,32 @@ public class Message extends MessageTypes implements Serializable
     private String messageBody;
     private int messageCode;
     private String nodeID;
+    private IPAddress nodeIP;
+    private Node currentNode;
 
-    public Message(String nodeID, String mBody, int mCode)
+    public Message(Node inNode, String mBody, int mCode)
     {
         switch(mCode)
         {
             case JOIN_CODE:
                 messageBody = mBody;
                 messageCode = mCode;
-                this.nodeID = nodeID;
+                this.currentNode = inNode;
                 break;
             case JOINED_CODE:
                 messageBody = mBody;
                 messageCode = mCode;
-                this.nodeID = nodeID;
+                this.currentNode = inNode;
                 break;
             case NOTE_CODE:
                 messageBody = mBody;
                 messageCode = mCode;
-                this.nodeID = nodeID;
+                this.currentNode = inNode;
                 break;
             case LEAVE_CODE:
                 messageBody = mBody;
                 messageCode = mCode;
-                this.nodeID = nodeID;
+                this.currentNode = inNode;
                 break;
             default:
                 throw new IllegalArgumentException("Message code does not exist...");
@@ -41,5 +43,8 @@ public class Message extends MessageTypes implements Serializable
     {
         return messageCode;
     }
-
+    public Node getNode()
+    {
+        return currentNode;
+    }
 }

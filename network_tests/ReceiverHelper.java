@@ -5,9 +5,13 @@ public class ReceiverHelper extends MessageTypes implements Runnable
     Thread currentThread;
     Socket currentSocket;
     Message currentMessage;
-    ReceiverHelper( Socket inSocket )
+    Node currentNode;
+    NodeInfo currentMesh;
+    Node referenceNode;
+    ReceiverHelper( Socket inSocket, Node currentNode )
     {
         currentSocket = inSocket;
+        this.currentNode = currentNode;
     }
     public void run()
     {
@@ -18,7 +22,9 @@ public class ReceiverHelper extends MessageTypes implements Runnable
             switch (currentMessage.getCode())
             {
                 case JOIN_CODE:
-                    break;
+                    referenceNode = currentMessage.getNode();
+                    currentMesh = currentNode.getChatMesh();
+                    referenceNode.setChatMesh(currentMesh);
                 case JOINED_CODE:
                     break;
                 case NOTE_CODE:

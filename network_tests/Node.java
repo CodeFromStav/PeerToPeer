@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 
 /* Test class to verify server-client connection functionality */
-public class Node
+public class Node extends MessageTypes
 {
     private String nodeID;
     private IPAddress nodeIP;
@@ -66,7 +66,7 @@ public class Node
             String ipString = ip.toString();
             try
             {
-                Receiver nodeReceiver = new Receiver(ip);
+                Receiver nodeReceiver = new Receiver(ip,this);
                 nodeReceiver.start();
                 /*If the node is serving on localhost, it is the first node in the
                 chat app*/
@@ -111,9 +111,10 @@ public class Node
         return ipString.equals("127.0.10.250");
     }
 
-    public void startSender(int msgCode)
+    public void startSender(int msgCode, NodeInfo chatMesh)
     {
-        Sender nodeSender = new Sender( msgCode );
+        Message joinMessage = new Message(this,"",msgCode);
+        Sender nodeSender = new Sender( joinMessage, this );
         nodeSender.start();
     }
     private String assignID(String ipString)
@@ -127,5 +128,14 @@ public class Node
     public IPAddress getIP()
     {
         return nodeIP;
+    }
+    public NodeInfo getChatMesh()
+    {
+        return chatMesh;
+    }
+    public void setChatMesh(NodeInfo chatMesh)
+    {
+        this.chatMesh = chatMesh;
+        system.out.println(this.chatMesh.size());
     }
 }
