@@ -9,6 +9,10 @@ public class Node
     private NodeInfo chatMesh;
     private Socket nodeSocket;
 
+    public Node()
+    {
+        chatMesh = new NodeInfo();
+    }
     /*Returns IP that the node is able to use for its connection information
     and also opens up a socket connection with an available node on the network
     to retrieve its nodeInfo for future communications in the mesh*/
@@ -28,10 +32,13 @@ public class Node
                 /*Adds the first value to the ArrayList. Cool thing is,
                 no matter how many nodes join the mesh, only one reference
                 to a chatMesh will exist.*/
-                chatMesh = new NodeInfo();
                 chatMesh.update(this);
                 return local;
             }
+            /*If the server has already been started, the new node sends a message
+            to the node it finds to grab its nodeInfo to store as its own, updates
+            that node info with its own node information, and then sends the updated NodeInfo
+            to every other node in the mesh.*/
             try
             {
                 nodeSocket = new Socket( ipString, 8080 );
