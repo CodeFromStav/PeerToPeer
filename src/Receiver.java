@@ -1,9 +1,5 @@
-package chat;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
+import java.io.*;
+import java.net.*;
 
 public class Receiver implements Runnable
 {
