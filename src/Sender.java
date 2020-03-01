@@ -68,7 +68,7 @@ public class Sender extends Message implements Runnable
                 {
                     case (JOIN_CODE):
 
-                        // Getting the IP address of the first node in NodeInfo ArrayList<Node>
+                        // Getting the necessary variables of the first node in NodeInfo ArrayList<Node>
                         firstNodeIP = NodeInfo.getIPAddress(0);
                         firstNodeSocket = NodeInfo.getDatagramSocket(0);
                         firstNodePortNumber = NodeInfo.getPortNumber(0);
@@ -109,19 +109,8 @@ public class Sender extends Message implements Runnable
                         // Convert message into byte form
                         byte[] bufferJoined = nodeMessage.getBytes();
 
-                        // Iterate through ArrayList<Node> so that each node receives the message
-                        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
-                        {
-                            // Creating DatagramPacket to send to each node
-                            DatagramPacket datagramJoined = new DatagramPacket(
-                                    bufferJoined,
-                                    bufferJoined.length,
-                                    NodeInfo.getIPAddress(index),
-                                    NodeInfo.getPortNumber(index));
-
-                            // Send command for DatagramSockets
-                            NodeInfo.getDatagramSocket(index).send(datagramJoined);
-                        }
+                        // Send message to all nodes in NodeInfo ArrayList<Node>
+                        sendToAllNodes(bufferJoined);
 
                         break;
 
@@ -139,19 +128,9 @@ public class Sender extends Message implements Runnable
                         // Convert message into byte form
                         byte[] bufferNote = nodeMessage.getBytes();
 
-                        // Iterate through ArrayList<Node> so that each node receives the message
-                        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
-                        {
-                            // Creating DatagramPacket to send to each node
-                            DatagramPacket datagramNote = new DatagramPacket(
-                                    bufferNote,
-                                    bufferNote.length,
-                                    NodeInfo.getIPAddress(index),
-                                    NodeInfo.getPortNumber(index));
+                        // Send message to all nodes in NodeInfo ArrayList<Node>
+                        sendToAllNodes(bufferNote);
 
-                            // Send command for DatagramSockets
-                            NodeInfo.getDatagramSocket(index).send(datagramNote);
-                        }
                         break;
 
                     case (LEAVE_CODE):
@@ -165,19 +144,8 @@ public class Sender extends Message implements Runnable
                         // Convert message into byte form
                         byte[] bufferLeave = nodeMessage.getBytes();
 
-                        // Iterate through ArrayList<Node> so that each node receives the message
-                        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
-                        {
-                            // Creating DatagramPacket to send to each node
-                            DatagramPacket datagramLeave = new DatagramPacket(
-                                    bufferLeave,
-                                    bufferLeave.length,
-                                    NodeInfo.getIPAddress(index),
-                                    NodeInfo.getPortNumber(index));
-
-                            // Send command for DatagramSockets
-                            NodeInfo.getDatagramSocket(index-1).send(datagramLeave);
-                        }
+                        // Send message to all nodes in NodeInfo ArrayList<Node>
+                        sendToAllNodes(bufferLeave);
 
                         // Set socketClosed boolean to true to signify that the socket is closed
                         socketClosed = true;
@@ -194,5 +162,31 @@ public class Sender extends Message implements Runnable
                 System.out.println("Socket closed!");
                 e.printStackTrace();
             }
+    }
+
+    // Method necessary for sending a message to all of the nodes in ArrayList<Node>
+    public void sendToAllNodes(byte[] buffer)
+    {
+        // Iterate through ArrayList<Node> so that each node receives the message
+        for(int index = 0; index < NodeInfo.getArrayListSize(); index++)
+        {
+            try {
+                // Creating DatagramPacket to send to each node
+                DatagramPacket datagram = new DatagramPacket(
+                    buffer,
+                    buffer.length,
+                    NodeInfo.getIPAddress(index),
+                    NodeInfo.getPortNumber(index));
+
+                // Send command for DatagramSockets
+                NodeInfo.getDatagramSocket(index).send(datagram);
+            }
+
+            catch (IOException e)
+            {
+                System.out.println("Datagram doesn't exist!");
+                e.printStackTrace();
+            }
+        }
     }
 }
