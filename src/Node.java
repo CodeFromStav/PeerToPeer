@@ -4,53 +4,132 @@ import java.util.*;
 
 public class Node
 {
-    private static final String TERMINATE = "Exit";
-    static String name;
-    static volatile boolean finished = false;
-    public static void main(String[] args)
+    // Static int to keep consistent record of number of nodes for NodeInfo ArrayList<Node>
+    static volatile int nodeNumber = 1;
+
+    private InetAddress IPAddress;
+    private String username;
+    private DatagramSocket socket;
+    private int portNumber;
+
+    // constructor for Node object
+    Node(InetAddress IPAddress, String username, DatagramSocket socket, int portNumber, int nodeNumber)
     {
-        if (args.length != 2)
-            System.out.println("Two arguments required: <multicast-host> <port-number>");
+        this.IPAddress = IPAddress;
+        this.username = username;
+        this.socket = socket;
+        this.portNumber = portNumber;
+        this.nodeNumber = nodeNumber;
+    }
+
+    // getter method to return IPAddress of Node
+    InetAddress getIPAddress()
+    {
+        return this.IPAddress;
+    }
+
+    // getter method to return username of Node
+    String getUsername()
+    {
+        return this.username;
+    }
+
+    // getter method to return Socket of Node
+    DatagramSocket getSocket()
+    {
+        return this.socket;
+    }
+
+    // getter method to return port number of Node
+    int getPortNumber()
+    {
+        return this.portNumber;
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        NodeInfo nodeInfo = null;
+        Scanner userInput;
+        String userHostname;
+        InetAddress userIP;
+        String username;
+        int portNumber;
+        String firstParticipant;
+
+        // Ask user for their Hostname from terminal/cmd
+        System.out.print("Please enter your hostname: ");
+
+        // Scan in user's Hostname and store result
+        userInput = new Scanner(System.in);
+        userHostname = userInput.nextLine();
+
+        // Grab user's IP using their Hostname
+        userIP = InetAddress.getByName(userHostname);
+
+        // Ask user for their username from terminal/cmd
+        System.out.print("Please enter your username: ");
+
+        // Scan in user's username and store result
+        userInput = new Scanner(System.in);
+        username = userInput.nextLine();
+
+        // Ask user for their port number from terminal/cmd
+        System.out.print("Please enter your port number: ");
+
+        // Scan in user's port number and store result
+        userInput = new Scanner(System.in);
+        portNumber = userInput.nextInt();
+
+        // Create a new Datagram socket for node
+        DatagramSocket nodeSocket = new DatagramSocket(portNumber, userIP);
+
+        // Ask user for if they're the first user in this chat session
+        System.out.print("Are you the first participant? (yes/no) ");
+
+        // Scan in user's response and store result
+        userInput = new Scanner(System.in);
+        firstParticipant = userInput.nextLine();
+
+        // If this is the first node in the chat session
+        if(firstParticipant.equalsIgnoreCase("yes"))
+        {
+            // Create new Node object with data supplied by user
+            Node newNode = new Node(userIP, username, nodeSocket, portNumber, nodeNumber);
+
+            // Create new NodeInfo object
+            nodeInfo = new NodeInfo();
+
+            // Add Node to NodeInfo class (ArrayList<Node>)
+            nodeInfo.createNodeEntry(newNode);
+
+            // Increment nodeNumber so that it stays consistent with the number of nodes
+            nodeNumber++;
+        }
         else
         {
-            try
-            {
-                InetAddress group = InetAddress.getByName(args[0]);
-                int port = Integer.parseInt(args[1]);
-                Scanner sc = new Scanner(System.in);
-                System.out.print("Enter your name: ");
-                name = sc.nextLine();
-                MulticastSocket socket = new MulticastSocket(port);
+            // Create new Node object with data supplied by user
+            Node newNode = new Node(userIP, username, nodeSocket, portNumber, nodeNumber);
 
-                // Since we are deploying
-                socket.setTimeToLive(0);
-                //this on localhost only (For a subnet set it as 1)
+            // Add Node to NodeInfo class (ArrayList<Node>)
+            nodeInfo.createNodeEntry(newNode);
 
-                socket.joinGroup(group);
-                Thread t = new Thread(new Receiver(socket,group,port));
-
-                // Spawn a thread for reading messages
-                t.start();
-
-                socket.joinGroup(group);
-                Thread t = new Thread(new Sender(socket,group,port));
-
-                // Spawn a thread for reading messages
-                t.start();
-
-                // sent to the current group
-                System.out.println("Start typing messages...\n");
-            }
-            catch(SocketException se)
-            {
-                System.out.println("Error creating socket");
-                se.printStackTrace();
-            }
-            catch(IOException ie)
-            {
-                System.out.println("Error reading/writing from/to socket");
-                ie.printStackTrace();
-            }
+            // Increment nodeNumber so that it stays consistent with the number of nodes
+            nodeNumber++;
         }
+
+        // Create a new Receiver Thread object using user's IP, socket and port number
+        Thread receieverThread = new Thread(new Receiver(userIP, nodeSocket, portNumber));
+
+        // Spawn a thread for reading messages
+        receieverThread.start();
+
+        // Create a new Sender Thread object using user's IP, username, Socket and port#
+        Thread senderThread = new Thread(new Sender(userIP, username, nodeSocket, portNumber));
+
+        // Spawn a thread for reading messages
+        senderThread.start();
+
+        // Let the user know that they can start sending messages
+        System.out.println("You can start typing your messages...\n");
     }
 }
