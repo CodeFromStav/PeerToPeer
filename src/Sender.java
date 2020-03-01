@@ -28,11 +28,17 @@ public class Sender extends Message implements Runnable
         Scanner messageScanner;
         String[] nodeMessageSplit;
 
-        // Variables necessary for Message constructor
+        // Variable necessary for Message constructor
         String messageType;
 
-        while(true)
+        // Variables necessary for different parts of message contents
+        InetAddress messageIP;
+        String messageUsername;
+        DatagramSocket messageDatagramSocket;
+        int messagePortNumber;
+        String messageNote;
 
+        while(true)
             try
             {
                 // Scan in Node's message and store result
@@ -46,27 +52,52 @@ public class Sender extends Message implements Runnable
                 // Assigning variable to the node's IP Address
                 messageType = nodeMessageSplit[0];
 
+                // Create new Message object to handle each message from Node
                 Message newMessage = new Message(messageType.toLowerCase(), nodeMessageSplit);
 
-                if(nodeMessage.equalsIgnoreCase("exit"))
+                // Switch to handle different message types
+                //      Necessary since the contents of the messages vary
+                //      Template of each message type is specified in switch statement
+                switch(newMessage.getMessageCode())
                 {
-                    socket.close();
-                    break;
-                }
-                nodeMessage = username + ": " + nodeMessage;
-                byte[] buffer = nodeMessage.getBytes();
+                    case (JOIN_CODE):
+                        break;
 
-                for(int index = 1; index <= NodeInfo.getArrayListSize(); index++)
-                {
-                    System.out.println(NodeInfo.getArrayListSize());
+                    case (JOINED_CODE):
+                        break;
 
-                    DatagramPacket datagram = new DatagramPacket(
-                            buffer,
-                            buffer.length,
-                            NodeInfo.getIPAddress(index-1),
-                            NodeInfo.getPortNumber(index-1));
+                    case (NOTE_CODE):
 
-                    socket.send(datagram);
+                        // Get and reassign contents
+                        nodeMessageSplit = newMessage.getMessageBody();
+
+                        // Since this a note message, its contents will be "<type>,<note>"
+                        messageNote = nodeMessageSplit[1];
+
+                        // Create message to send to each node
+                        nodeMessage = username + ": " + messageNote;
+
+                        // Convert message into byte form
+                        byte[] buffer = nodeMessage.getBytes();
+
+                        // Iterate through ArrayList<Node> so that each node receives the message
+                        for(int index = 1; index <= NodeInfo.getArrayListSize(); index++)
+                        {
+                            // Creating DatagramPacket to send to each node
+                            DatagramPacket datagram = new DatagramPacket(
+                                    buffer,
+                                    buffer.length,
+                                    NodeInfo.getIPAddress(index-1),
+                                    NodeInfo.getPortNumber(index-1));
+
+                            // Send command for DatagramSockets
+                            NodeInfo.getDatagramSocket(index-1).send(datagram);
+                        }
+                        break;
+
+                    case (LEAVE_CODE):
+                        socket.close();
+                        break;
                 }
             }
 

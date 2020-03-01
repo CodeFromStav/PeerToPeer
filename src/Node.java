@@ -59,6 +59,8 @@ public class Node
         String firstParticipant;
 
         // Ask user for their Hostname from terminal/cmd
+        //      For all OS's: Open terminal/cmd and type "hostname" and press enter.
+        //      The resulting output will be your computer's hostname
         System.out.print("Please enter your hostname: ");
 
         // Scan in user's Hostname and store result
@@ -109,6 +111,14 @@ public class Node
             Node newNode = new Node(userIP, username, nodeSocket, portNumber);
         }
 
+        // Node creation confirmation
+        System.out.println("\nYour node has been created!");
+
+        // Layout for 3 types of message: Join, Leave, Note
+        //      Join message is required for new nodes
+        System.out.println("Here is the format for each type of message (entered without quotes):" +
+                        "\n    Join: 'join'\n    Leave: 'exit'\n    Note: 'note,<yournote>'");
+
         // Create a new Receiver Thread object using user's IP, socket and port number
         Thread receiverThread = new Thread(new Receiver(userIP, nodeSocket, portNumber));
 
@@ -122,6 +132,6 @@ public class Node
         senderThread.start();
 
         // Let the user know that they can start sending messages
-        System.out.println("You can start typing your messages...\n");
+        System.out.println("\nYou can start typing your messages...\n");
     }
 }

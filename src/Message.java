@@ -4,7 +4,7 @@ import java.io.*;
 public class Message extends MessageTypes implements Serializable
 {
     private String messageType;
-    private String[] messageBody;
+    private String[] messageContents;
     private int messageCode;
 
     // Constructor for Message class
@@ -16,19 +16,19 @@ public class Message extends MessageTypes implements Serializable
         switch(messageType)
         {
             case ("join"):
-                this.messageBody = entireMessageSplit;
+                this.messageContents = entireMessageSplit;
                 messageCode = super.JOIN_CODE;
                 break;
             case ("joined"):
-                this.messageBody = entireMessageSplit;
+                this.messageContents = entireMessageSplit;
                 messageCode = super.JOINED_CODE;
                 break;
             case ("note"):
-                this.messageBody = entireMessageSplit;
+                this.messageContents = entireMessageSplit;
                 messageCode = super.NOTE_CODE;
                 break;
             case ("leave"):
-                this.messageBody = entireMessageSplit;
+                this.messageContents = entireMessageSplit;
                 messageCode = super.LEAVE_CODE;
                 break;
             default:
@@ -38,4 +38,17 @@ public class Message extends MessageTypes implements Serializable
 
     // Empty constructor
     public Message() { }
+
+    // Getter method for returning the message code
+    int getMessageCode()
+    {
+        return this.messageCode;
+    }
+
+    // Getter method for returning the contents of the entire message
+    String[] getMessageBody()
+    {
+        return this.messageContents;
+    }
+
 }
