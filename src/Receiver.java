@@ -7,6 +7,7 @@ public class Receiver implements Runnable
     private InetAddress group;
     private int port;
     private static final int MAX_LEN = 1000;
+
     Receiver(MulticastSocket socket,InetAddress group,int port)
     {
         this.socket = socket;
@@ -20,14 +21,16 @@ public class Receiver implements Runnable
         while(!Node.finished)
         {
             byte[] buffer = new byte[Receiver.MAX_LEN];
-            DatagramPacket datagram = new
-                    DatagramPacket(buffer,buffer.length,group,port);
+
+            DatagramPacket datagram = new DatagramPacket(buffer,buffer.length,group,port);
+
             String message;
+
             try
             {
                 socket.receive(datagram);
-                message = new
-                        String(buffer,0,datagram.getLength(),"UTF-8");
+                message = new String(buffer,0,datagram.getLength(),"UTF-8");
+
                 if(!message.startsWith(Node.name))
                     System.out.println(message);
             }
