@@ -15,7 +15,7 @@ public class Node
     private DatagramSocket socket;
     private int portNumber;
 
-    // constructor for Node object
+    // Constructor for Node object
     Node(InetAddress IPAddress, String username, DatagramSocket socket, int portNumber)
     {
         this.IPAddress = IPAddress;
@@ -24,30 +24,31 @@ public class Node
         this.portNumber = portNumber;
     }
 
-    // getter method to return IPAddress of Node
+    // Getter method to return IPAddress of Node
     InetAddress getIPAddress()
     {
         return this.IPAddress;
     }
 
-    // getter method to return username of Node
+    // Getter method to return username of Node
     String getUsername()
     {
         return this.username;
     }
 
-    // getter method to return Socket of Node
+    // Getter method to return Socket of Node
     DatagramSocket getDatagramSocket()
     {
         return this.socket;
     }
 
-    // getter method to return port number of Node
+    // Getter method to return port number of Node
     int getPortNumber()
     {
         return this.portNumber;
     }
 
+    // Main; driver for project
     public static void main(String[] args) throws IOException {
 
         Scanner userInput;

@@ -3,12 +3,15 @@ import java.io.*;
 
 public class Receiver implements Runnable
 {
+    // Static int that determines the max length of a buffer
+    private static final int MAX_LEN = 1000;
+
+    // Local private variables used within constructor
     private InetAddress IPAddress;
     private DatagramSocket socket;
     private int portNumber;
 
-    private static final int MAX_LEN = 1000;
-
+    // Constructor for Receiver class
     Receiver(InetAddress IPAddress, DatagramSocket socket, int portNumber)
     {
         this.IPAddress = IPAddress;
