@@ -29,17 +29,24 @@ public class Sender implements Runnable
                 message = sc.nextLine();
                 if(message.equalsIgnoreCase("exit"))
                 {
-                    Node.finished = true;
                     socket.close();
                     break;
                 }
                 message = username + ": " + message;
                 byte[] buffer = message.getBytes();
 
+                for(int index = 1; index <= NodeInfo.getArrayListSize(); index++)
+                {
+                    System.out.println(NodeInfo.getArrayListSize());
 
-                DatagramPacket datagram = new DatagramPacket(buffer,buffer.length, IPAddress, portNumber);
-                socket.send(datagram);
+                    DatagramPacket datagram = new DatagramPacket(
+                            buffer,
+                            buffer.length,
+                            NodeInfo.getIPAddress(index-1),
+                            NodeInfo.getPortNumber(index-1));
 
+                    socket.send(datagram);
+                }
             }
 
             catch (IOException e)

@@ -7,19 +7,21 @@ public class Node
     // Static int to keep consistent record of number of nodes for NodeInfo ArrayList<Node>
     static volatile int nodeNumber = 1;
 
+    // Static NodeInfo object that can be updated real time
+    static volatile NodeInfo nodeInfo = null;
+
     private InetAddress IPAddress;
     private String username;
     private DatagramSocket socket;
     private int portNumber;
 
     // constructor for Node object
-    Node(InetAddress IPAddress, String username, DatagramSocket socket, int portNumber, int nodeNumber)
+    Node(InetAddress IPAddress, String username, DatagramSocket socket, int portNumber)
     {
         this.IPAddress = IPAddress;
         this.username = username;
         this.socket = socket;
         this.portNumber = portNumber;
-        this.nodeNumber = nodeNumber;
     }
 
     // getter method to return IPAddress of Node
@@ -35,7 +37,7 @@ public class Node
     }
 
     // getter method to return Socket of Node
-    DatagramSocket getSocket()
+    DatagramSocket getDatagramSocket()
     {
         return this.socket;
     }
@@ -48,7 +50,6 @@ public class Node
 
     public static void main(String[] args) throws IOException {
 
-        NodeInfo nodeInfo = null;
         Scanner userInput;
         String userHostname;
         InetAddress userIP;
@@ -86,7 +87,6 @@ public class Node
         // Ask user for if they're the first user in this chat session
         System.out.print("Are you the first participant? (yes/no) ");
 
-        // Scan in user's response and store result
         userInput = new Scanner(System.in);
         firstParticipant = userInput.nextLine();
 
@@ -94,34 +94,25 @@ public class Node
         if(firstParticipant.equalsIgnoreCase("yes"))
         {
             // Create new Node object with data supplied by user
-            Node newNode = new Node(userIP, username, nodeSocket, portNumber, nodeNumber);
+            Node newNode = new Node(userIP, username, nodeSocket, portNumber);
 
             // Create new NodeInfo object
             nodeInfo = new NodeInfo();
 
             // Add Node to NodeInfo class (ArrayList<Node>)
             nodeInfo.createNodeEntry(newNode);
-
-            // Increment nodeNumber so that it stays consistent with the number of nodes
-            nodeNumber++;
         }
         else
         {
             // Create new Node object with data supplied by user
-            Node newNode = new Node(userIP, username, nodeSocket, portNumber, nodeNumber);
-
-            // Add Node to NodeInfo class (ArrayList<Node>)
-            nodeInfo.createNodeEntry(newNode);
-
-            // Increment nodeNumber so that it stays consistent with the number of nodes
-            nodeNumber++;
+            Node newNode = new Node(userIP, username, nodeSocket, portNumber);
         }
 
         // Create a new Receiver Thread object using user's IP, socket and port number
-        Thread receieverThread = new Thread(new Receiver(userIP, nodeSocket, portNumber));
+        Thread receiverThread = new Thread(new Receiver(userIP, nodeSocket, portNumber));
 
         // Spawn a thread for reading messages
-        receieverThread.start();
+        receiverThread.start();
 
         // Create a new Sender Thread object using user's IP, username, Socket and port#
         Thread senderThread = new Thread(new Sender(userIP, username, nodeSocket, portNumber));
