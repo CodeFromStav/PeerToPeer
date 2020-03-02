@@ -34,6 +34,7 @@ public class Node extends MessageTypes
 
                 this.nodeIP = availableIP;
                 System.out.println( "server is down, initializing node " + nodeID + "on IP... " + ipString );
+                setChatMesh(nodeSocket);
                 return;
             }
             catch ( Exception ex )
