@@ -32,16 +32,13 @@ public class Sender extends Message implements Runnable
         Scanner messageScanner;
         String[] nodeMessageSplit;
 
-        // Variables necessary for joining
-        InetAddress firstNodeIP;
-        DatagramSocket firstNodeSocket;
-        int firstNodePortNumber;
-
         // Variable necessary for Message constructor
         String messageType;
 
         // Variables necessary for different parts of message contents
         String messageNote;
+        String messageParticipantIP;
+        InetAddress participantIP;
 
         // Continue to loop until socket is closed
         while(!socketClosed)
@@ -68,10 +65,17 @@ public class Sender extends Message implements Runnable
                 {
                     case (JOIN_CODE):
 
-                        // Getting the necessary variables of the first node in NodeInfo ArrayList<Node>
-                        firstNodeIP = NodeInfo.getIPAddress(0);
-                        firstNodeSocket = NodeInfo.getDatagramSocket(0);
-                        firstNodePortNumber = NodeInfo.getPortNumber(0);
+                        // Get and reassign contents
+                        nodeMessageSplit = newMessage.getMessageBody();
+
+                        // Since this a note message, its contents will be "<type>,<ipaddress>"
+                        messageParticipantIP = nodeMessageSplit[1];
+
+                        // Converting String object of IP address to InetAddress object
+                        participantIP = InetAddress.getByName(messageParticipantIP);
+
+                        // Storing participant Node to a temp for join message
+                        Node participantNode = NodeInfo.findNodeEntry(participantIP);
 
                         // Create message to send to first node
                         nodeMessage = username + " wants to join the chat!";
@@ -79,21 +83,23 @@ public class Sender extends Message implements Runnable
                         // Convert message into byte form
                         byte[] bufferJoin = nodeMessage.getBytes();
 
-                        // Creating DatagramPacket to send to first node
-                        DatagramPacket datagramJoin = new DatagramPacket(
-                                bufferJoin,
-                                bufferJoin.length,
-                                firstNodeIP,
-                                firstNodePortNumber);
-
-                        // Send Datagram to first node
-                        firstNodeSocket.send(datagramJoin);
+                        System.out.println(NodeInfo.getArrayListSize());
 
                         // Creating a new Node with the information provided by the new node
                         Node newNode = new Node(IPAddress, username, socket, portNumber);
 
                         // Add an entry to the NodeInfo ArrayList<Node> for the new node
                         NodeInfo.createNodeEntry(newNode);
+
+                        // Creating DatagramPacket to send to first node
+                        DatagramPacket datagramJoin = new DatagramPacket(
+                                bufferJoin,
+                                bufferJoin.length,
+                                participantNode.getIPAddress(),
+                                participantNode.getPortNumber());
+
+                        // Send Datagram to first node
+                        participantNode.getDatagramSocket().send(datagramJoin);
 
                         // Purposely omit "break" statement here to force JOINED_CODE case...
 

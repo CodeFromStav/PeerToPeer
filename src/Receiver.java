@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 // Class necessary for printing out received messages to terminal/cmd
 public class Receiver implements Runnable
@@ -44,7 +45,7 @@ public class Receiver implements Runnable
 
                 // Convert the Datagram object into a String object
                 receivedMessage = new String(bufferReceiver, 0, datagramReceived.getLength(),
-                        "UTF-8");
+                        StandardCharsets.UTF_8);
 
                 // Print the received message to the screen
                 System.out.println(receivedMessage);
