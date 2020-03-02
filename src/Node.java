@@ -1,3 +1,18 @@
+/*
+Authors: Matthew Amato-Yarbrough
+         Brigham Ray
+         Stavros Triantis
+Date: Spring 2020
+
+References:
+
+https://docs.oracle.com/javase/7/docs/api/java/net/DatagramPacket.html
+https://docs.oracle.com/javase/7/docs/api/java/net/DatagramSocket.html
+https://docs.oracle.com/javase/7/docs/api/java/net/Socket.html
+https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html
+https://docs.oracle.com/javase/7/docs/api/java/net/InetAddress.html
+ */
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -53,25 +68,29 @@ public class Node
 
         // Variables necessary for gathering user input
         Scanner userInput;
-        String userHostname;
+        InetAddress userAddress;
         InetAddress userIP;
+        String[] userAddressSplit;
         String username;
         int portNumber;
         String firstParticipant;
 
         try
         {
-            // Ask user for their Hostname from terminal/cmd
-            //      For all OS's: Open terminal/cmd and type "hostname" and press enter.
-            //      The resulting output will be your computer's hostname
-            System.out.print("Please enter your hostname: ");
+            // Letting user know of IP Address retrieval
+            System.out.println("Retrieving IP Address...");
 
-            // Scan in user's Hostname and store result
-            userInput = new Scanner(System.in);
-            userHostname = userInput.nextLine();
+            // Get the user's Hostname/IP address
+            userAddress = InetAddress.getLocalHost();
 
-            // Grab user's IP using their Hostname
-            userIP = InetAddress.getByName(userHostname);
+            // Split userAddress for IP Address
+            userAddressSplit = userAddress.toString().split("/");
+
+            // Converting String object of IP address to InetAddress object
+            userIP = InetAddress.getByName(userAddressSplit[1]);
+
+            // Printing out user's IP Address to the screen
+            System.out.println("IP Address found! Your IP Address: " + userAddressSplit[1]);
 
             // Ask user for their username from terminal/cmd
             System.out.print("Please enter your username: ");
@@ -106,16 +125,17 @@ public class Node
                 nodeInfo = new NodeInfo();
 
                 // Add Node to NodeInfo class (ArrayList<Node>)
-                nodeInfo.createNodeEntry(newNode);
+                NodeInfo.createNodeEntry(newNode);
             }
 
             // Node creation confirmation
-            System.out.println("\nYour node has been created!");
+            System.out.println("Your node has been created!");
 
             // Layout for 3 types of message: Join, Leave, Note
             //      Join message is required for new nodes
-            System.out.println("Here is the format for each type of message (entered without quotes):" +
-                            "\n    Join: 'join'\n    Leave: 'leave'\n    Note: 'note,<yournote>'");
+            System.out.println("\nHere is the format for each type of message (entered without quotes):" +
+                    "\n    Join: 'join,<ipaddressofparticipantnode>'\n    Leave: 'leave'\n    " +
+                    "Note: 'note,<yournote>'");
 
             // Create a new Receiver Thread object using user's IP, socket and port number
             Thread receiverThread = new Thread(new Receiver(userIP, nodeSocket, portNumber));
@@ -139,8 +159,7 @@ public class Node
 
         catch (IOException e)
         {
-            System.out.println("Illegal hostname!\nFor all OS's: Open terminal/cmd and type 'hostname' and " +
-                    "press enter.\nThe resulting output will be your computer's hostname.");
+            System.out.println("Failed to create Datagram Socket!");
             e.printStackTrace();
         }
     }
