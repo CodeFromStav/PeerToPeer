@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 
 /* Test class to verify server-client connection functionality */
-public class Node extends MessageTypes
+public class Node extends MessageTypes implements Serializable
 {
     private String nodeID;
     private IPAddress nodeIP;
@@ -47,6 +47,7 @@ public class Node extends MessageTypes
                 ip.incrementIP();
                 IPAddress availableIP = findAvailableIP(ip);
                 nodeID = assignID(availableIP.toString());
+
                 return availableIP;
             }
             catch ( Exception ex )
@@ -58,15 +59,14 @@ public class Node extends MessageTypes
         }
     }
 
-    public void startReceiver(IPAddress ip) throws Exception
+    public void startReceiver() throws Exception
     {
         /*if server is not full...*/
-        if ( ip != null )
+        if ( this.nodeIP != null )
         {
-            String ipString = ip.toString();
             try
             {
-                Receiver nodeReceiver = new Receiver(ip,this);
+                Receiver nodeReceiver = new Receiver(this);
                 nodeReceiver.start();
                 /*If the node is serving on localhost, it is the first node in the
                 chat app*/
@@ -91,8 +91,12 @@ public class Node extends MessageTypes
             try
             {
                 /*if a socket is established, that ip is being used, so the next ip
-                is checked to see if it is available.*/
+                is checked to see if it is available. The socket it successfully creates retreives
+                an updated chatMesh from the already connected node.*/
                 Socket testSocket = new Socket( ipString,8080 );
+                System.out.println( "Socket opened....");
+
+                setChatMesh( testSocket );
                 testSocket.close();
                 ip.incrementIP();
             }
@@ -113,7 +117,7 @@ public class Node extends MessageTypes
 
     public void startSender(int msgCode, NodeInfo chatMesh)
     {
-        Message joinMessage = new Message(this,"",msgCode);
+        Message joinMessage = new Message(this.chatMesh,"",msgCode);
         Sender nodeSender = new Sender( joinMessage, this );
         nodeSender.start();
     }
@@ -124,6 +128,7 @@ public class Node extends MessageTypes
     public void setIP(IPAddress ip) throws Exception
     {
         nodeIP = initializeNode(ip);
+        System.out.println("This node's IP is ... " + nodeIP);
     }
     public IPAddress getIP()
     {
@@ -133,9 +138,33 @@ public class Node extends MessageTypes
     {
         return chatMesh;
     }
-    public void setChatMesh(NodeInfo chatMesh)
+    public void setChatMesh(Socket inSocket)
     {
-        this.chatMesh = chatMesh;
-        system.out.println(this.chatMesh.size());
+        try
+        {
+            System.out.println("setChatMesh got called");
+
+            ObjectOutputStream toNode = new ObjectOutputStream( inSocket.getOutputStream() );
+            Message joinMessage = new Message(this,"",100);
+            toNode.writeObject( joinMessage );
+            System.out.println("yo");
+            ObjectInputStream fromNode = new ObjectInputStream( inSocket.getInputStream() );
+            Message currentMessage = (Message) fromNode.readObject();
+            chatMesh = currentMessage.getNode().getChatMesh();
+            System.out.println("Chat mesh is... " + chatMesh.getSize() + "Nodes Deep");
+        }
+        catch ( IOException ex )
+        {
+            ex.printStackTrace();
+        }
+        catch ( ClassNotFoundException ex )
+        {
+            System.out.println("CNFException...");
+        }
     }
+    public void updateMesh(Node inNode)
+    {
+        chatMesh.update(inNode);
+    }
+
 }

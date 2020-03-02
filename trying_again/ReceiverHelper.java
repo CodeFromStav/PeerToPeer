@@ -4,13 +4,12 @@ public class ReceiverHelper extends MessageTypes implements Runnable
 {
     Thread currentThread;
     Socket currentSocket;
-    Message currentMessage;
-    Node currentNode;
-    NodeInfo currentMesh;
-    Node referenceNode;
-    ReceiverHelper( Socket inSocket, Node currentNode )
+    NodeInfo nodeInfo;
+    String[] currentNode;
+    ReceiverHelper( Socket inSocket, NodeInfo nodeInfo, String[] currentNode)
     {
         currentSocket = inSocket;
+        this.nodeInfo = nodeInfo;
         this.currentNode = currentNode;
     }
     public void run()
@@ -20,7 +19,7 @@ public class ReceiverHelper extends MessageTypes implements Runnable
             System.out.println("i am receiving!!");
 
             ObjectInputStream fromNode = new ObjectInputStream( currentSocket.getInputStream() );
-            currentMessage = (Message) fromNode.readObject();
+            Message currentMessage = (Message) fromNode.readObject();
             System.out.println("i read a messages");
             switch (currentMessage.getCode())
             {
@@ -29,10 +28,10 @@ public class ReceiverHelper extends MessageTypes implements Runnable
                 case NOTE_CODE:
                     break;
                 case JOIN_CODE:
-                    referenceNode = currentMessage.getNode();
-                    currentNode.updateMesh(referenceNode);
+                    String[] nodeData = currentMessage.getCurrentNode();
+                    nodeInfo.update(nodeData);
                     ObjectOutputStream toNode = new ObjectOutputStream( currentSocket.getOutputStream() );
-                    Message joinMessage = new Message(currentNode,"",101);
+                    Message joinMessage = new Message( nodeInfo, currentNode, JOINED_CODE, "" );
                     toNode.writeObject( joinMessage );
                     break;
             }
@@ -52,6 +51,10 @@ public class ReceiverHelper extends MessageTypes implements Runnable
         catch ( ClassNotFoundException ex )
         {
 
+        }
+        catch ( Exception ex )
+        {
+            ex.printStackTrace();
         }
     }
 

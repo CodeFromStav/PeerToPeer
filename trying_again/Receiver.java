@@ -6,13 +6,13 @@ public class Receiver implements Runnable
 {
     // running thread associated with client
     Thread currentThread;
+    NodeInfo nodeInfo;
+    String[] currentNode;
     // socket associated with client's connection
-    Node currentNode;
-
-    Receiver(Node currentNode)
+    public Receiver(NodeInfo nodeInfo, String[] currentNode)
     {
+        this.nodeInfo = nodeInfo;
         this.currentNode = currentNode;
-    /* Runnable portion of the class, opens up a connection between the client and client*/
     }
     public void run()
     {
@@ -20,13 +20,13 @@ public class Receiver implements Runnable
         {
             try
             {
-                InetAddress nodeAddress = InetAddress.getByName(currentNode.getIP().toString());
+                InetAddress nodeAddress = InetAddress.getByName(currentNode[1]);
                 ServerSocket server = new ServerSocket(8080,50,nodeAddress);
                 while (true)
                 {
                     Socket serverClient = server.accept();
-                    System.out.println("Someone is trying to message");
-                    ReceiverHelper inMessage = new ReceiverHelper(serverClient,currentNode);
+                    System.out.println("hey sexy....");
+                    ReceiverHelper inMessage = new ReceiverHelper(serverClient,nodeInfo,currentNode);
                     inMessage.start();
                 }
             }

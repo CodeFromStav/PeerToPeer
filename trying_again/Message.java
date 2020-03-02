@@ -3,33 +3,36 @@ public class Message extends Node implements Serializable
 {
     private String messageBody;
     private int messageCode;
-    private String nodeID;
-    private IPAddress nodeIP;
     private NodeInfo inNodeInfo;
+    private String[] nodeInfo;
 
-    public Message (NodeInfo inNodeInfo, String mBody, int mCode)
+    public Message (NodeInfo inNodeInfo, String[] nodeInfo, int messageCode, String messageBody) throws Exception
     {
-        switch(mCode)
+        switch(messageCode)
         {
             case JOIN_CODE:
-                messageBody = mBody;
-                messageCode = mCode;
+                this.nodeInfo = nodeInfo;
                 this.inNodeInfo = inNodeInfo;
+                this.messageBody = messageBody;
+                this.messageCode = messageCode;
                 break;
             case JOINED_CODE:
-                messageBody = mBody;
-                messageCode = mCode;
+                this.nodeInfo = nodeInfo;
                 this.inNodeInfo = inNodeInfo;
+                this.messageBody = messageBody;
+                this.messageCode = messageCode;
                 break;
             case NOTE_CODE:
-                messageBody = mBody;
-                messageCode = mCode;
+                this.nodeInfo = nodeInfo;
                 this.inNodeInfo = inNodeInfo;
+                this.messageBody = messageBody;
+                this.messageCode = messageCode;
                 break;
             case LEAVE_CODE:
-                messageBody = mBody;
-                messageCode = mCode;
+                this.nodeInfo = nodeInfo;
                 this.inNodeInfo = inNodeInfo;
+                this.messageBody = messageBody;
+                this.messageCode = messageCode;
                 break;
             default:
                 throw new IllegalArgumentException("Message code does not exist...");
@@ -45,6 +48,10 @@ public class Message extends Node implements Serializable
     }
     public NodeInfo getNodeInfo()
     {
-        return NodeInfo;
+        return inNodeInfo;
+    }
+    public String[] getCurrentNode()
+    {
+        return nodeInfo;
     }
 }
