@@ -9,7 +9,7 @@ public class Receiver implements Runnable
     // socket associated with client's connection
     Node currentNode;
 
-    Receiver(Node currentNode)
+    Receiver(NodeInfo chatMesh, String[] currentNode)
     {
         this.currentNode = currentNode;
     /* Runnable portion of the class, opens up a connection between the client and client*/

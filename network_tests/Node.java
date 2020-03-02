@@ -5,18 +5,13 @@ import java.io.*;
 public class Node extends MessageTypes implements Serializable
 {
     private String nodeID;
-    private IPAddress nodeIP;
+    private String nodeIP;
     private NodeInfo chatMesh;
-    private Socket nodeSocket;
 
-    public Node()
-    {
-        chatMesh = new NodeInfo();
-    }
     /*Returns IP that the node is able to use for its connection information
     and also opens up a socket connection with an available node on the network
     to retrieve its nodeInfo for future communications in the mesh*/
-    private IPAddress initializeNode(IPAddress ip) throws Exception
+    public Node() throws Exception
     {
         while (true)
         {
