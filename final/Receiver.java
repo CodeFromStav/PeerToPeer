@@ -20,8 +20,7 @@ public class Receiver implements Runnable
         {
             try
             {
-                InetAddress nodeAddress = InetAddress.getByName(currentNode[1]);
-                ServerSocket server = new ServerSocket(8080,50,nodeAddress);
+                ServerSocket server = new ServerSocket(Integer.parseInt(currentNode[2]));
                 while (true)
                 {
                     Socket serverClient = server.accept();

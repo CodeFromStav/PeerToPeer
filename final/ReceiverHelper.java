@@ -28,9 +28,11 @@ public class ReceiverHelper extends MessageTypes implements Runnable
                 case NOTE_CODE:
                     break;
                 case JOIN_CODE:
-                    String[] nodeData = currentMessage.getCurrentNode();
-                    nodeInfo.update(nodeData);
+                    // Updates the already connected node with new node's information
+                    nodeInfo.update(currentMessage.getCurrentNode());
                     ObjectOutputStream toNode = new ObjectOutputStream( currentSocket.getOutputStream() );
+
+                    // sends back updated NodeInfo to the new Node trying to connect.
                     Message joinMessage = new Message( nodeInfo, currentNode, JOINED_CODE, "" );
                     toNode.writeObject( joinMessage );
                     break;

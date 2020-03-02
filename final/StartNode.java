@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 public class StartNode
 {
     public static void main(String[] args) {
@@ -29,7 +30,8 @@ public class StartNode
             userIP = InetAddress.getByName(userAddressSplit[1]);
 
             // Printing out user's IP Address to the screen
-            System.out.println("IP Address found! Your IP Address: " + userAddressSplit[1]);
+            System.out.println("IP Address found! Your IP Address: " +
+                userAddressSplit[1]);
 
             // Ask user for their userName from terminal/cmd
             System.out.print("Please enter your userName: ");
@@ -39,23 +41,31 @@ public class StartNode
             userName = userInput.nextLine();
 
             // Ask user for their port number from terminal/cmd
-            System.out.print("Please enter your port number: ");
+            //System.out.print("Please enter your port number: ");
 
             // Scan in user's port number and store result
-            userInput = new Scanner(System.in);
-            portNumber = userInput.nextInt();
+            //userInput = new Scanner(System.in);
+            //portNumber = userInput.nextInt();
+            Socket activePort = findActivePort( userIP );
+            if (activePort == null)
+            {
+                portNumber = 1024;
+                Node newNode = new Node( userName, userIP, portNumber );
+                newNode.startReceiver();
+            }
+            else
+            {
+                portNumber = getInactivePort( userIP );
+                Node newNode = new Node( userName, userIP, portNumber );
+                newNode.updateMesh(getUpdatedInfo(activePort));
+                newNode.startReceiver();
+            }
 
-            // Ask user for if they're the first user in this chat session
-            System.out.print("Are you the first participant? (yes/no) ");
-
-            userInput = new Scanner(System.in);
-            firstParticipant = userInput.nextLine();
-
-            // Create new Node object with data supplied by user
-            Node newNode = new Node( userName, userIP, portNumber );
 
             // Node creation confirmation
             System.out.println("Your node has been created!");
+            System.out.println("Your port is " + portNumber);
+
 
             // Layout for 3 types of message: Join, Leave, Note
             //      Join message is required for new nodes
@@ -65,11 +75,6 @@ public class StartNode
 
             // Create a new Receiver Thread object using user's IP, socket and port number
 
-            // Warning to new nodes to join first
-            if (firstParticipant.equalsIgnoreCase("no"))
-            {
-                System.out.println("\nNew users need to 'join' first!");
-            }
 
             // Spawn a thread for reading messages
             //receiverThread.start();
@@ -90,5 +95,49 @@ public class StartNode
             e.printStackTrace();
         }
 
+
+
+    }
+    public static int getInactivePort(InetAddress userIP)
+    {
+        int portNum = 1024;
+        while (true)
+        {
+            try
+            {
+                Socket testSocket = new Socket(userIP.getHostAddress(),portNum);
+                testSocket.close();
+                portNum++;
+            }
+            catch (Exception ex)
+            {
+                return portNum;
+            }
+        }
+    }
+    public static Socket findActivePort(InetAddress userIP)
+    {
+        for (int i = 1024; i < 1050; i++)
+        {
+            try
+            {
+                Socket testSocket = new Socket(userIP.getHostAddress(),i);
+                return testSocket;
+            }
+            catch (Exception ex)
+            {
+                i++;
+            }
+        }
+        return null;
+    }
+    public static NodeInfo getUpdatedInfo(Socket inSocket)
+    {
+        ObjectOutputStream toNode = new ObjectOutputStream( currentSocket.getOutputStream() );
+
+        // sends back updated NodeInfo to the new Node trying to connect.
+        Message joinMessage = new Message( nodeInfo, currentNode, JOINED_CODE, "" );
+        toNode.writeObject( joinMessage );
+        return null;
     }
 }

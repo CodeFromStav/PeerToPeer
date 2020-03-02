@@ -63,4 +63,17 @@ public class Node
         String intStr = "" + portNumber;
         return new String[] {userName, IPNumber.getHostAddress(), intStr};
     }
+
+    public void updateMesh(NodeInfo inNodeInfo)
+    {
+        nodeInfo = inNodeInfo;
+    }
+
+    public void startReceiver()
+    {
+        Receiver newReceiver = new Receiver(nodeInfo, getCurrentNode());
+        newReceiver.start();
+
+    }
+
 }
