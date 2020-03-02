@@ -1,39 +1,60 @@
-import java.io.*;
 import java.net.*;
+import java.io.*;
 
+// Class necessary for printing out received messages to terminal/cmd
 public class Receiver implements Runnable
 {
-    private MulticastSocket socket;
-    private InetAddress group;
-    private int port;
+    // Static int that determines the max length of a buffer
     private static final int MAX_LEN = 1000;
-    Receiver(MulticastSocket socket,InetAddress group,int port)
+
+    // Local private variables used within constructor
+    private InetAddress IPAddress;
+    private DatagramSocket socket;
+    private int portNumber;
+
+    // Constructor for Receiver class
+    Receiver(InetAddress IPAddress, DatagramSocket socket, int portNumber)
     {
+        this.IPAddress = IPAddress;
         this.socket = socket;
-        this.group = group;
-        this.port = port;
+        this.portNumber = portNumber;
     }
 
+    // Run method necessary for classes that implement "Runnable"
     @Override
     public void run()
     {
-        while(!Node.finished)
+        String receivedMessage;
+
+        // Continue to loop until break is hit in the catch block
+        while(true)
         {
-            byte[] buffer = new byte[Receiver.MAX_LEN];
-            DatagramPacket datagram = new
-                    DatagramPacket(buffer,buffer.length,group,port);
-            String message;
+
+            // Create buffer of MAX_LEN
+            byte[] bufferReceiver = new byte[Receiver.MAX_LEN];
+
+            // Creating a DatagramPacket to send back to the Node
+            DatagramPacket datagramReceived = new DatagramPacket(bufferReceiver, bufferReceiver.length,
+                    IPAddress, portNumber);
+
             try
             {
-                socket.receive(datagram);
-                message = new
-                        String(buffer,0,datagram.getLength(),"UTF-8");
-                if(!message.startsWith(Node.name))
-                    System.out.println(message);
+                // Getting Datagram sent by socket
+                socket.receive(datagramReceived);
+
+                // Convert the Datagram object into a String object
+                receivedMessage = new String(bufferReceiver, 0, datagramReceived.getLength(),
+                        "UTF-8");
+
+                // Print the received message to the screen
+                System.out.println(receivedMessage);
             }
+
+            // Catch statement for when the while loop terminates because the socket closed
             catch(IOException e)
             {
-                System.out.println("Socket closed!");
+                System.out.println("You have left the chat; socket closed!");
+                break;
             }
         }
     }
