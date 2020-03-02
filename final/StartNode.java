@@ -66,7 +66,7 @@ public class StartNode
             // Create a new Receiver Thread object using user's IP, socket and port number
 
             // Warning to new nodes to join first
-            if (firstParticipant.equalsIgnoreCase("yes"))
+            if (firstParticipant.equalsIgnoreCase("no"))
             {
                 System.out.println("\nNew users need to 'join' first!");
             }

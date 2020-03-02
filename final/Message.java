@@ -1,5 +1,5 @@
 import java.io.*;
-public class Message extends Node implements Serializable
+public class Message implements Serializable
 {
     private String messageBody;
     private int messageCode;
