@@ -24,13 +24,14 @@ public class ReceiverHelper extends MessageTypes implements Runnable
             switch ( currentMessage.getCode( ))
             {
                 case JOINED_CODE:
-                    //System.out.println( "confirmation received by: " + currentMessage.getCurrentNode( )[0]);
+                    //System.out.println( "Node: " + currentMessage.getCurrentNode( )[0] + " has joined");
+
                     inNode.updateMesh( currentMessage.getNodeInfo( ));
 
                     //System.out.println( "updated nodeList is..." + inNode.nodeInfoToString( ));
                     break;
                 case LEAVE_CODE:
-                    //System.out.println( currentMessage.getCurrentNode( )[0] + "has left the chat...");
+                    System.out.println( currentMessage.getCurrentNode( )[0] + " has left the chat...");
                     inNode.removeNode(  Integer.parseInt( currentMessage.getCurrentNode( )[2]));
                     //System.out.println( "updated nodeList is..." + inNode.nodeInfoToString( ) + "After leave");
 
@@ -47,7 +48,7 @@ public class ReceiverHelper extends MessageTypes implements Runnable
                     //ObjectOutputStream toNode = new ObjectOutputStream(  currentSocket.getOutputStream( ) );
 
                     // sends back updated NodeInfo to the new Node trying to connect.
-                    //System.out.println( "Node: " + currentMessage.getCurrentNode( )[0] + " Wants to join...");
+                    //System.out.println( "Node: " + currentMessage.getCurrentNode( )[0] + " has joined.");
                     //Message joinMessage = new Message(  nodeInfo, currentNode, JOINED_CODE, "" );
                     //toNode.writeObject(  joinMessage );
                     //System.out.println( "Join message sent to " + currentMessage.getCurrentNode( )[0]);

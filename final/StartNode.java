@@ -44,7 +44,7 @@ public class StartNode
                 portNumber = 1024;
                 newNode = new Node(userName, userIP, portNumber);
                 newNode.addNodeData(newNode.getCurrentNode());
-                System.out.println(newNode.nodeInfoToString());
+                //System.out.println(newNode.nodeInfoToString());
                 printConfirmation(newNode);
                 newNode.startReceiver();
                 newNode.startSender();
@@ -111,6 +111,7 @@ public class StartNode
 
             // sends back updated NodeInfo to the new Node trying to connect.
             Message joinMessage = new Message(newNode.getNodeInfo(), newNode.getCurrentNode(), 100, "");
+            //System.out.println("Node: " + newNode.getCurrentNode()[0] + " has joined.");
             toNode.writeObject(joinMessage);
         }
 
@@ -131,6 +132,7 @@ public class StartNode
                     Socket sendSocket = new Socket(inNodeInfo.get(i)[1], Integer.parseInt(inNodeInfo.get(i)[2]));
                     Message joinedMessage = new Message(inNodeInfo, currentNode, 110, "");
                     ObjectOutputStream toMesh = new ObjectOutputStream(sendSocket.getOutputStream());
+                    System.out.println("Node: " + currentNode[0] + " has joined.");
                     toMesh.writeObject(joinedMessage);
                 }
             }
@@ -144,11 +146,7 @@ public class StartNode
     //print function
     public static void printConfirmation(Node inNode)
     {
-        System.out.println("Your node has been created!");
-        System.out.println("Your port is " + inNode.getPortNumber());
-        System.out.println("\nHere is the format for each type of message (entered without quotes):" +
-                "\n    Join: 'join,<ipaddressofparticipantnode>'\n    Leave: 'leave'\n    " +
-                "Note: 'note,<yournote>'");
+        System.out.println(inNode.getCurrentNode()[0] + " has entered the chat.");
         System.out.println("\nYou can start typing your messages...\n");
     }
 
