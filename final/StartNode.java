@@ -76,6 +76,7 @@ public class StartNode
         }
         System.exit(1);
     }
+    
     public static int getInactivePort(InetAddress userIP)
     {
         int portNum = 1024;
@@ -93,6 +94,7 @@ public class StartNode
             }
         }
     }
+    //port between 1024 and 1050
     public static Socket findActivePort(InetAddress userIP)
     {
         for (int i = 1024; i < 1050; i++)
@@ -109,6 +111,7 @@ public class StartNode
         }
         return null;
     }
+    //updates nodeInfo for this class
     public static void getUpdatedInfo(Socket inSocket, Node newNode)
     {
         try
@@ -137,6 +140,7 @@ public class StartNode
             ex.printStackTrace();
         }
     }
+    //Confirms Join
     public static void sendConfirmation(NodeInfo inNodeInfo, String[] currentNode)
     {
         try
@@ -157,6 +161,7 @@ public class StartNode
             e.printStackTrace();
         }
     }
+    //print function
     public static void printConfirmation(Node inNode)
     {
         System.out.println("Your node has been created!");
