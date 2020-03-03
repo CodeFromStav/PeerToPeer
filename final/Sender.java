@@ -19,29 +19,31 @@ public class Sender extends MessageTypes implements Runnable
     {
         Scanner userInput = new Scanner( System.in );// = new Scanner( System.in );
         String messageBody = "";// = userInput.nextLine();
+        //System.out.println("Sender Started");
         while (!messageBody.contains("leave"))
         {
             try
             {
-                nodeInfo = inNode.getNodeInfo();
                 messageBody = userInput.nextLine();
                 if (!messageBody.contains("leave"))
                 {
                     Message msg = new Message(inNode.getNodeInfo(), inNode.getCurrentNode(), 110, messageBody);
-                    System.out.println(inNode.nodeInfoToString());
+                    //System.out.println(inNode.nodeInfoToString());
                     sendMessage(msg, inNode.getNodeInfo());
                 }
                 else
                 {
                     Message msg = new Message(inNode.getNodeInfo(), inNode.getCurrentNode(), 105, "");
+
                     sendMessage(msg, inNode.getNodeInfo());
-                    System.out.println( "Goodbye " + currentNode[0] );
+                    inNode.removeNode( Integer.parseInt(currentNode[2] ));
+                    //System.out.println( "Goodbye " + currentNode[0] + "." );
                 }
 
             }
             catch (Exception ex)
             {
-
+                ex.printStackTrace();
             }
         }
     }
@@ -65,6 +67,7 @@ public class Sender extends MessageTypes implements Runnable
                 {
                     Socket toNode = new Socket(nodeInfo.get(i)[1], Integer.parseInt(nodeInfo.get(i)[2]));
                     ObjectOutputStream out = new ObjectOutputStream( toNode.getOutputStream() );
+                    //System.out.println("Sending message...");
                     out.writeObject(msg);
                 }
             }

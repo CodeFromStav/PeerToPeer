@@ -8,11 +8,11 @@ public class NodeInfo implements Serializable
     {
         meshData.add(nodeData);
     }
-    public void remove(String nodeID)
+    public void remove(int inPort)
     {
         for ( int i = 0; i < meshData.size(); i++ )
         {
-            if ( meshData.get(i)[0] == nodeID )
+            if ( Integer.parseInt(meshData.get(i)[2]) == inPort )
             {
                 meshData.remove( i );
             }
@@ -50,6 +50,18 @@ public class NodeInfo implements Serializable
             infoToString += "}";
         }
         return "Current NodeInfo is " + infoToString;
+    }
+    public boolean inChatMesh(int inPort)
+    {
+        for ( int i = 0; i < meshData.size(); i++ )
+        {
+            if ( Integer.parseInt(meshData.get(i)[2]) == inPort )
+            {
+                return true;
+            }
+        }
+        return false;
+
     }
 
 }

@@ -71,7 +71,7 @@ public class Node
 
     public void startReceiver()
     {
-        Receiver newReceiver = new Receiver(nodeInfo, getCurrentNode());
+        Receiver newReceiver = new Receiver(nodeInfo, getCurrentNode(), this);
         newReceiver.start();
 
     }
@@ -113,5 +113,9 @@ public class Node
         Sender sendBoy = new Sender(nodeInfo, getCurrentNode(), this);
         sendBoy.start();
 
+    }
+    public void removeNode(int inPort)
+    {
+        nodeInfo.remove(inPort);
     }
 }

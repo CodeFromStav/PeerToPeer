@@ -111,7 +111,7 @@ public class StartNode
         }
         return null;
     }
-    public static void getUpdatedInfo(Socket inSocket, Node newNode)
+    public static void getUpdatedInfo( Socket inSocket, Node newNode )
     {
         try
         {
