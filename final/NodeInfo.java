@@ -22,4 +22,8 @@ public class NodeInfo implements Serializable
     {
         return meshData.size();
     }
+    public String[] get(int index)
+    {
+        return meshData.get(index);
+    }
 }

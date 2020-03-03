@@ -16,13 +16,14 @@ public class ReceiverHelper extends MessageTypes implements Runnable
     {
         try
         {
-            System.out.println("i am receiving!!");
-
             ObjectInputStream fromNode = new ObjectInputStream( currentSocket.getInputStream() );
             Message currentMessage = (Message) fromNode.readObject();
-            System.out.println("i read a messages");
+            System.out.println("connectingNode info: " + currentMessage.getCurrentNode()[0]);
             switch (currentMessage.getCode())
             {
+                case JOINED_CODE:
+
+                    break;
                 case LEAVE_CODE:
                     break;
                 case NOTE_CODE:
@@ -30,11 +31,17 @@ public class ReceiverHelper extends MessageTypes implements Runnable
                 case JOIN_CODE:
                     // Updates the already connected node with new node's information
                     nodeInfo.update(currentMessage.getCurrentNode());
+
+                    // Send back the updated ArrayList to the newly connected node
                     ObjectOutputStream toNode = new ObjectOutputStream( currentSocket.getOutputStream() );
 
                     // sends back updated NodeInfo to the new Node trying to connect.
+                    System.out.println("Node: " + currentMessage.getCurrentNode()[0] + " Wants to join...");
                     Message joinMessage = new Message( nodeInfo, currentNode, JOINED_CODE, "" );
                     toNode.writeObject( joinMessage );
+                    System.out.println("Join message sent to " + currentMessage.getCurrentNode()[0]);
+                    sendConfirmation( nodeInfo,currentNode );
+
                     break;
             }
             /*
@@ -57,6 +64,27 @@ public class ReceiverHelper extends MessageTypes implements Runnable
         catch ( Exception ex )
         {
             ex.printStackTrace();
+        }
+    }
+
+    public void sendConfirmation(NodeInfo inNodeInfo, String[] currentNode)
+    {
+        try
+        {
+            for (int i = 0; i < inNodeInfo.getSize(); i++) {
+                if (inNodeInfo.get(i)[2] != currentNode[2])
+                {
+                    System.out.println("Trying to send confirmation to port: " + inNodeInfo.get(i)[1] + " " + inNodeInfo.get(i)[2]);
+                    Socket sendSocket = new Socket(inNodeInfo.get(i)[1], Integer.parseInt(inNodeInfo.get(i)[2]));
+                    Message joinedMessage = new Message( nodeInfo, currentNode, JOINED_CODE, "" );
+                    ObjectOutputStream toMesh = new ObjectOutputStream( sendSocket.getOutputStream() );
+                    toMesh.writeObject( joinedMessage );
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
         }
     }
 

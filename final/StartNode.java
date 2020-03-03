@@ -14,9 +14,11 @@ public class StartNode
         String userName;
         int portNumber;
         String firstParticipant;
+        Node newNode;
 
         try
         {
+
             // Letting user know of IP Address retrieval
             System.out.println("Retrieving IP Address...");
 
@@ -50,17 +52,17 @@ public class StartNode
             if (activePort == null)
             {
                 portNumber = 1024;
-                Node newNode = new Node( userName, userIP, portNumber );
-                newNode.startReceiver();
+                newNode = new Node( userName, userIP, portNumber );
+                newNode.addNodeData(newNode.getCurrentNode());
+                System.out.println( newNode.nodeInfoToString() );
             }
             else
             {
                 portNumber = getInactivePort( userIP );
-                Node newNode = new Node( userName, userIP, portNumber );
-                newNode.updateMesh(getUpdatedInfo(activePort));
-                newNode.startReceiver();
+                newNode = new Node( userName, userIP, portNumber );
+                newNode.updateMesh(getUpdatedInfo(activePort,newNode));
             }
-
+            newNode.startReceiver();
 
             // Node creation confirmation
             System.out.println("Your node has been created!");
@@ -91,7 +93,6 @@ public class StartNode
 
         catch (IOException e)
         {
-            System.out.println("Failed to create Datagram Socket!");
             e.printStackTrace();
         }
 
@@ -131,13 +132,33 @@ public class StartNode
         }
         return null;
     }
-    public static NodeInfo getUpdatedInfo(Socket inSocket)
+    public static NodeInfo getUpdatedInfo(Socket inSocket, Node newNode)
     {
-        ObjectOutputStream toNode = new ObjectOutputStream( currentSocket.getOutputStream() );
+        try
+        {
+            ObjectOutputStream toNode = new ObjectOutputStream( inSocket.getOutputStream() );
 
-        // sends back updated NodeInfo to the new Node trying to connect.
-        Message joinMessage = new Message( nodeInfo, currentNode, JOINED_CODE, "" );
-        toNode.writeObject( joinMessage );
+            // sends back updated NodeInfo to the new Node trying to connect.
+            Message joinMessage = new Message( newNode.getNodeInfo(), newNode.getCurrentNode(), 100, "" );
+            toNode.writeObject( joinMessage );
+            System.out.println( "joinMessage sent successfully  " );
+
+            ObjectInputStream fromNode = new ObjectInputStream( inSocket.getInputStream() );
+            System.out.println( "Instream created clientSide" );
+
+            Message currentMessage = (Message) fromNode.readObject();
+            newNode.updateMesh( currentMessage.getNodeInfo() );
+            System.out.println( "join confirmation received" );
+            System.out.println( newNode.nodeInfoToString() );
+
+
+
+            return currentMessage.getNodeInfo();
+        }
+        catch ( Exception ex )
+        {
+            ex.printStackTrace();
+        }
         return null;
     }
 }

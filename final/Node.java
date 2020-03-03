@@ -75,5 +75,37 @@ public class Node
         newReceiver.start();
 
     }
-
+    public NodeInfo getNodeInfo()
+    {
+        return nodeInfo;
+    }
+    public void addNodeData(String[] inData)
+    {
+        nodeInfo.update(inData);
+    }
+    public String nodeInfoToString()
+    {
+        String infoToString = " ";
+        for (int i = 0; i < nodeInfo.getSize(); i++)
+        {
+            infoToString += "{";
+            for (int j = 0; j < 3; j++)
+            {
+                switch(j)
+                {
+                    case 0:
+                        infoToString += "id: " + nodeInfo.get(i)[j] + ", ";
+                        break;
+                    case 1:
+                        infoToString += "ip: " + nodeInfo.get(i)[j]  + ", ";
+                        break;
+                    case 2:
+                        infoToString += "port: " + nodeInfo.get(i)[j]  + "";
+                        break;
+                }
+            }
+            infoToString += "}";
+        }
+        return "Current NodeInfo is " + infoToString;
+    }
 }
