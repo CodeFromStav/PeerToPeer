@@ -26,4 +26,30 @@ public class NodeInfo implements Serializable
     {
         return meshData.get(index);
     }
+    public String nodeInfoToString()
+    {
+        String infoToString = " ";
+        for (int i = 0; i < meshData.size(); i++)
+        {
+            infoToString += "{";
+            for (int j = 0; j < 3; j++)
+            {
+                switch(j)
+                {
+                    case 0:
+                        infoToString += "id: " + meshData.get(i)[j] + ", ";
+                        break;
+                    case 1:
+                        infoToString += "ip: " + meshData.get(i)[j]  + ", ";
+                        break;
+                    case 2:
+                        infoToString += "port: " + meshData.get(i)[j]  + "";
+                        break;
+                }
+            }
+            infoToString += "}";
+        }
+        return "Current NodeInfo is " + infoToString;
+    }
+
 }

@@ -20,7 +20,7 @@ public class StartNode
         {
 
             // Letting user know of IP Address retrieval
-            System.out.println("Retrieving IP Address...");
+            /*System.out.println("Retrieving IP Address...");
 
             // Get the user's Hostname/IP address
             userAddress = InetAddress.getLocalHost();
@@ -33,7 +33,9 @@ public class StartNode
 
             // Printing out user's IP Address to the screen
             System.out.println("IP Address found! Your IP Address: " +
-                userAddressSplit[1]);
+                userAddressSplit[1]);*/
+            userAddress = InetAddress.getByName("127.0.0.1");
+            userIP = InetAddress.getByName("127.0.0.1");
 
             // Ask user for their userName from terminal/cmd
             System.out.print("Please enter your userName: ");
@@ -55,49 +57,23 @@ public class StartNode
                 newNode = new Node( userName, userIP, portNumber );
                 newNode.addNodeData(newNode.getCurrentNode());
                 System.out.println( newNode.nodeInfoToString() );
+                printConfirmation(newNode);
+                newNode.startReceiver();
             }
             else
             {
                 portNumber = getInactivePort( userIP );
                 newNode = new Node( userName, userIP, portNumber );
+                printConfirmation(newNode);
+                newNode.startReceiver();
                 newNode.updateMesh(getUpdatedInfo(activePort,newNode));
             }
-            newNode.startReceiver();
-
-            // Node creation confirmation
-            System.out.println("Your node has been created!");
-            System.out.println("Your port is " + portNumber);
-
-
-            // Layout for 3 types of message: Join, Leave, Note
-            //      Join message is required for new nodes
-            System.out.println("\nHere is the format for each type of message (entered without quotes):" +
-                    "\n    Join: 'join,<ipaddressofparticipantnode>'\n    Leave: 'leave'\n    " +
-                    "Note: 'note,<yournote>'");
-
-            // Create a new Receiver Thread object using user's IP, socket and port number
-
-
-            // Spawn a thread for reading messages
-            //receiverThread.start();
-
-            // Create a new Sender Thread object using user's IP, userName, Socket and port#
-            // Thread senderThread = new Thread(new Sender(userIP, userName, nodeSocket, portNumber));
-
-            // Spawn a thread for sending messages
-
-
-            // Let the user know that they can start sending messages
-            System.out.println("\nYou can start typing your messages...\n");
         }
 
         catch (IOException e)
         {
             e.printStackTrace();
         }
-
-
-
     }
     public static int getInactivePort(InetAddress userIP)
     {
@@ -152,7 +128,7 @@ public class StartNode
             System.out.println( newNode.nodeInfoToString() );
 
 
-
+            //sendConfirmation(newNode.getNodeInfo(), newNode.getCurrentNode());
             return currentMessage.getNodeInfo();
         }
         catch ( Exception ex )
@@ -161,4 +137,34 @@ public class StartNode
         }
         return null;
     }
+    public static void sendConfirmation(NodeInfo inNodeInfo, String[] currentNode)
+    {
+        try
+        {
+            for (int i = 0; i < inNodeInfo.getSize(); i++) {
+                if (!inNodeInfo.get(i)[2].equals(currentNode[2]))
+                {
+                    System.out.println("Trying to send confirmation to port: " + inNodeInfo.get(i)[1] + " " + inNodeInfo.get(i)[2]);
+                    Socket sendSocket = new Socket(inNodeInfo.get(i)[1], Integer.parseInt(inNodeInfo.get(i)[2]));
+                    Message joinedMessage = new Message( inNodeInfo, currentNode, 110, "" );
+                    ObjectOutputStream toMesh = new ObjectOutputStream( sendSocket.getOutputStream() );
+                    toMesh.writeObject( joinedMessage );
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+    public static void printConfirmation(Node inNode)
+    {
+        System.out.println("Your node has been created!");
+        System.out.println("Your port is " + inNode.getPortNumber());
+        System.out.println("\nHere is the format for each type of message (entered without quotes):" +
+                "\n    Join: 'join,<ipaddressofparticipantnode>'\n    Leave: 'leave'\n    " +
+                "Note: 'note,<yournote>'");
+        System.out.println("\nYou can start typing your messages...\n");
+    }
+
 }

@@ -22,11 +22,13 @@ public class ReceiverHelper extends MessageTypes implements Runnable
             switch (currentMessage.getCode())
             {
                 case JOINED_CODE:
-
+                    System.out.println("confirmation received by: " + currentMessage.getCurrentNode()[0]);
+                    System.out.println("updated nodeList is..." + currentMessage.getNodeInfo().nodeInfoToString());
                     break;
                 case LEAVE_CODE:
                     break;
                 case NOTE_CODE:
+                    System.out.println(currentMessage.getMsg());
                     break;
                 case JOIN_CODE:
                     // Updates the already connected node with new node's information
@@ -72,11 +74,13 @@ public class ReceiverHelper extends MessageTypes implements Runnable
         try
         {
             for (int i = 0; i < inNodeInfo.getSize(); i++) {
-                if (inNodeInfo.get(i)[2] != currentNode[2])
+                if (!inNodeInfo.get(i)[2].equals(currentNode[2]))
                 {
+                    System.out.println("New Node Received, sending : " + inNodeInfo.nodeInfoToString());
+
                     System.out.println("Trying to send confirmation to port: " + inNodeInfo.get(i)[1] + " " + inNodeInfo.get(i)[2]);
                     Socket sendSocket = new Socket(inNodeInfo.get(i)[1], Integer.parseInt(inNodeInfo.get(i)[2]));
-                    Message joinedMessage = new Message( nodeInfo, currentNode, JOINED_CODE, "" );
+                    Message joinedMessage = new Message( inNodeInfo, currentNode, JOINED_CODE, "" );
                     ObjectOutputStream toMesh = new ObjectOutputStream( sendSocket.getOutputStream() );
                     toMesh.writeObject( joinedMessage );
                 }
