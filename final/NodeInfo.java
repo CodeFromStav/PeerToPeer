@@ -4,10 +4,12 @@ import java.io.*;
 public class NodeInfo implements Serializable
 {
     private ArrayList<String[]> meshData = new ArrayList<String[]>();
+
     public void update(String[] nodeData)
     {
         meshData.add(nodeData);
     }
+
     public void remove(int inPort)
     {
         for ( int i = 0; i < meshData.size(); i++ )
@@ -18,14 +20,17 @@ public class NodeInfo implements Serializable
             }
         }
     }
+
     public int getSize()
     {
         return meshData.size();
     }
+
     public String[] get(int index)
     {
         return meshData.get(index);
     }
+
     public String nodeInfoToString()
     {
         String infoToString = " ";
@@ -51,6 +56,7 @@ public class NodeInfo implements Serializable
         }
         return "Current NodeInfo is " + infoToString;
     }
+    //Checks to see if server needs to stop
     public boolean inChatMesh(int inPort)
     {
         for ( int i = 0; i < meshData.size(); i++ )

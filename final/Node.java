@@ -30,59 +30,62 @@ public class Node
     private int portNumber;
 
     // Constructor for Node object
-    Node(  String userName, InetAddress IPAddress, int portNumber)
+    Node( String userName, InetAddress IPAddress, int portNumber )
     {
         this.IPNumber = IPAddress;
         this.userName = userName;
         this.portNumber = portNumber;
-        nodeInfo = new NodeInfo( );
+        nodeInfo = new NodeInfo();
     }
 
     // Getter method to return IPAddress of Node
-    InetAddress getIPAddress( )
+    InetAddress getIPAddress()
     {
         return this.IPNumber;
     }
 
     // Getter method to return userName of Node
-    String getuserName( )
+    String getuserName()
     {
         return this.userName;
     }
 
     // Getter method to return port number of Node
-    int getPortNumber( )
+    int getPortNumber()
     {
         return this.portNumber;
     }
 
     // Main; driver for project
 
-    public String[] getCurrentNode( )
+    public String[] getCurrentNode()
     {
         String intStr = "" + portNumber;
-        return new String[] {userName, IPNumber.getHostAddress( ), intStr};
+        return new String[] {userName, IPNumber.getHostAddress(), intStr};
     }
-
-    public void updateMesh( NodeInfo inNodeInfo)
+    //updates mesh
+    public void updateMesh( NodeInfo inNodeInfo )
     {
         nodeInfo = inNodeInfo;
     }
-
+    //listens for incoming socket connections
     public void startReceiver( )
     {
-        Receiver newReceiver = new Receiver( nodeInfo, getCurrentNode( ), this);
+        Receiver newReceiver = new Receiver( nodeInfo, getCurrentNode(), this );
         newReceiver.start( );
-
     }
+    //returns nodeInfo
     public NodeInfo getNodeInfo( )
     {
         return nodeInfo;
     }
-    public void addNodeData( String[] inData)
+
+    public void addNodeData( String[] inData )
     {
         nodeInfo.update( inData);
     }
+
+    //converts nodeInfo to String
     public String nodeInfoToString( )
     {
         String infoToString = " ";
@@ -94,13 +97,13 @@ public class Node
                 switch( j)
                 {
                     case 0:
-                        infoToString += "id: " + nodeInfo.get( i)[j] + ", ";
+                        infoToString += "id: " + nodeInfo.get(i)[j] + ", ";
                         break;
                     case 1:
-                        infoToString += "ip: " + nodeInfo.get( i)[j]  + ", ";
+                        infoToString += "ip: " + nodeInfo.get(i)[j]  + ", ";
                         break;
                     case 2:
-                        infoToString += "port: " + nodeInfo.get( i)[j]  + "";
+                        infoToString += "port: " + nodeInfo.get(i)[j]  + "";
                         break;
                 }
             }
@@ -108,12 +111,13 @@ public class Node
         }
         return "Current NodeInfo is " + infoToString;
     }
-    public void startSender( )
-    {
-        Sender sendBoy = new Sender( nodeInfo, getCurrentNode( ), this);
-        //sendBoy.start( );
 
+    public void startSender()
+    {
+        Sender sendBoy = new Sender( nodeInfo, getCurrentNode( ), this );
+        //sendBoy.start( );
     }
+
     public void removeNode( int inPort)
     {
         nodeInfo.remove( inPort);

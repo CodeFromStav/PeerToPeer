@@ -4,7 +4,8 @@ import java.util.*;
 
 public class StartNode
 {
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
 
         // Variables necessary for gathering user input
         Scanner userInput;
@@ -19,7 +20,6 @@ public class StartNode
         try
         {
             // Letting user know of IP Address retrieval
-            //System.out.println("Retrieving IP Address...");
 
             // Get the user's Hostname/IP address
             userAddress = InetAddress.getLocalHost();
@@ -30,11 +30,7 @@ public class StartNode
             // Converting String object of IP address to InetAddress object
             userIP = InetAddress.getByName(userAddressSplit[1]);
 
-            // Printing out user's IP Address to the screen
-            // System.out.println("IP Address found! Your IP Address: " +
-                // userAddressSplit[1]);
-            //userAddress = InetAddress.getByName("127.0.0.1");
-            // Ask user for their userName from terminal/cmd
+
             System.out.print("Please enter your userName: ");
 
             // Scan in user's userName and store result
@@ -42,11 +38,6 @@ public class StartNode
             userName = userInput.nextLine();
 
             // Ask user for their port number from terminal/cmd
-            //System.out.print("Please enter your port number: ");
-
-            // Scan in user's port number and store result
-            //userInput = new Scanner(System.in);
-            //portNumber = userInput.nextInt();
             Socket activePort = findActivePort(userIP);
             if (activePort == null)
             {
@@ -76,7 +67,7 @@ public class StartNode
         }
         System.exit(1);
     }
-    
+    //allows us to check if node not active
     public static int getInactivePort(InetAddress userIP)
     {
         int portNum = 1024;
@@ -121,20 +112,8 @@ public class StartNode
             // sends back updated NodeInfo to the new Node trying to connect.
             Message joinMessage = new Message(newNode.getNodeInfo(), newNode.getCurrentNode(), 100, "");
             toNode.writeObject(joinMessage);
-            //System.out.println("joinMessage sent successfully  ");
-
-            //ObjectInputStream fromNode = new ObjectInputStream(inSocket.getInputStream());
-            //System.out.println("Instream created clientSide");
-
-            //Message currentMessage = (Message) fromNode.readObject();
-            //newNode.updateMesh(currentMessage.getNodeInfo());
-            //System.out.println("join confirmation received");
-            //System.out.println(newNode.nodeInfoToString());
-
-
-            //sendConfirmation(newNode.getNodeInfo(), newNode.getCurrentNode());
-            //return currentMessage.getNodeInfo();
         }
+
         catch (Exception ex)
         {
             ex.printStackTrace();
@@ -156,6 +135,7 @@ public class StartNode
                 }
             }
         }
+
         catch (Exception e)
         {
             e.printStackTrace();
