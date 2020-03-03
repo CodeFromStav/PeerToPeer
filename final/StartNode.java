@@ -56,7 +56,7 @@ public class StartNode
                 portNumber = 1024;
                 newNode = new Node( userName, userIP, portNumber );
                 newNode.addNodeData(newNode.getCurrentNode());
-                System.out.println( newNode.nodeInfoToString() );
+                //System.out.println( newNode.nodeInfoToString() );
                 printConfirmation(newNode);
                 newNode.startReceiver();
                 newNode.startSender();
@@ -77,6 +77,7 @@ public class StartNode
         {
             e.printStackTrace();
         }
+        System.exit(1);
     }
     public static int getInactivePort(InetAddress userIP)
     {

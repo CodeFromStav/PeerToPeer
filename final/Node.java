@@ -111,7 +111,7 @@ public class Node
     public void startSender()
     {
         Sender sendBoy = new Sender(nodeInfo, getCurrentNode(), this);
-        sendBoy.start();
+        //sendBoy.start();
 
     }
     public void removeNode(int inPort)

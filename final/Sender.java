@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class Sender extends MessageTypes implements Runnable
+public class Sender extends MessageTypes// implements Runnable
 {
     private Thread currentThread;
     private NodeInfo nodeInfo;
@@ -13,8 +13,41 @@ public class Sender extends MessageTypes implements Runnable
         this.currentNode = currentNode;
         this.nodeInfo = nodeInfo;
         this.inNode = inNode;
+        run();
     }
 
+    /*public void run()
+    {
+        Scanner userInput = new Scanner( System.in );// = new Scanner( System.in );
+        String messageBody = "";// = userInput.nextLine();
+        //System.out.println("Sender Started");
+        while (!messageBody.contains("leave"))
+        {
+            try
+            {
+                messageBody = userInput.nextLine();
+                if (!messageBody.contains("leave"))
+                {
+                    Message msg = new Message(inNode.getNodeInfo(), inNode.getCurrentNode(), 110, messageBody);
+                    //System.out.println(inNode.nodeInfoToString());
+                    sendMessage(msg, inNode.getNodeInfo());
+                }
+                else
+                {
+                    Message msg = new Message(inNode.getNodeInfo(), inNode.getCurrentNode(), 105, "");
+
+                    sendMessage(msg, inNode.getNodeInfo());
+                    inNode.removeNode( Integer.parseInt(currentNode[2] ));
+                    //System.out.println( "Goodbye " + currentNode[0] + "." );
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+    }*/
     public void run()
     {
         Scanner userInput = new Scanner( System.in );// = new Scanner( System.in );
@@ -49,14 +82,14 @@ public class Sender extends MessageTypes implements Runnable
     }
 
     /* Creates a new thread to start a server-client connection */
-    public void start()
+    /*public void start()
     {
         if (currentThread == null)
         {
             currentThread = new Thread(this);
             currentThread.start();
         }
-    }
+    }*/
     public void sendMessage(Message msg, NodeInfo nodeInfo)
     {
         try
