@@ -6,26 +6,26 @@ public class Message implements Serializable
     private NodeInfo inNodeInfo;
     private String[] nodeInfo;
 
-    public Message (NodeInfo inNodeInfo, String[] nodeInfo, int messageCode, String messageBody)
+    public Message ( NodeInfo inNodeInfo, String[] nodeInfo, int messageCode, String messageBody)
     {
         this.nodeInfo = nodeInfo;
         this.inNodeInfo = inNodeInfo;
         this.messageBody = messageBody;
         this.messageCode = messageCode;
     }
-    public String getMsg()
+    public String getMsg( )
     {
         return nodeInfo[0] + " says: " + messageBody;
     }
-    public int getCode()
+    public int getCode( )
     {
         return messageCode;
     }
-    public NodeInfo getNodeInfo()
+    public NodeInfo getNodeInfo( )
     {
         return inNodeInfo;
     }
-    public String[] getCurrentNode()
+    public String[] getCurrentNode( )
     {
         return nodeInfo;
     }

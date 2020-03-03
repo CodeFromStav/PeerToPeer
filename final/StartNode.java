@@ -18,40 +18,27 @@ public class StartNode
 
         try
         {
-            String inPort = args[0];
             // Letting user know of IP Address retrieval
-            System.out.println("Retrieving IP Address...");
+            //System.out.println("Retrieving IP Address...");
 
             // Get the user's Hostname/IP address
-            if (args[0] == null)
-            {
-                userAddress = InetAddress.getLocalHost();
-                // Split userAddress for IP Address
-                userAddressSplit = userAddress.toString().split("/");
+            userAddress = InetAddress.getLocalHost();
 
-                // Converting String object of IP address to InetAddress object
-                userIP = InetAddress.getByName(userAddressSplit[1]);
+            // Split userAddress for IP Address
+            userAddressSplit = userAddress.toString().split("/");
 
-            }
-            else
-            {
-                userIP = InetAddress.getByName(args[0]);
-            }
-            //userAddress = InetAddress.getLocalHost();
-
-
+            // Converting String object of IP address to InetAddress object
+            userIP = InetAddress.getByName(userAddressSplit[1]);
 
             // Printing out user's IP Address to the screen
-            //System.out.println("IP Address found! Your IP Address: " +
-                //userAddressSplit[1]);
+            // System.out.println("IP Address found! Your IP Address: " +
+                // userAddressSplit[1]);
             //userAddress = InetAddress.getByName("127.0.0.1");
-            //userIP = InetAddress.getByName("127.0.0.1");
-
             // Ask user for their userName from terminal/cmd
             System.out.print("Please enter your userName: ");
 
             // Scan in user's userName and store result
-            userInput = new Scanner( System.in );
+            userInput = new Scanner(System.in);
             userName = userInput.nextLine();
 
             // Ask user for their port number from terminal/cmd
@@ -60,21 +47,21 @@ public class StartNode
             // Scan in user's port number and store result
             //userInput = new Scanner(System.in);
             //portNumber = userInput.nextInt();
-            Socket activePort = findActivePort( userIP );
+            Socket activePort = findActivePort(userIP);
             if (activePort == null)
             {
                 portNumber = 1024;
-                newNode = new Node( userName, userIP, portNumber );
+                newNode = new Node(userName, userIP, portNumber);
                 newNode.addNodeData(newNode.getCurrentNode());
-                System.out.println( newNode.nodeInfoToString() );
+                System.out.println(newNode.nodeInfoToString());
                 printConfirmation(newNode);
                 newNode.startReceiver();
                 newNode.startSender();
             }
             else
             {
-                portNumber = getInactivePort( userIP );
-                newNode = new Node( userName, userIP, portNumber );
+                portNumber = getInactivePort(userIP);
+                newNode = new Node(userName, userIP, portNumber);
                 printConfirmation(newNode);
                 newNode.startReceiver();
                 getUpdatedInfo(activePort,newNode);
@@ -122,30 +109,30 @@ public class StartNode
         }
         return null;
     }
-    public static void getUpdatedInfo( Socket inSocket, Node newNode )
+    public static void getUpdatedInfo(Socket inSocket, Node newNode)
     {
         try
         {
-            ObjectOutputStream toNode = new ObjectOutputStream( inSocket.getOutputStream() );
+            ObjectOutputStream toNode = new ObjectOutputStream(inSocket.getOutputStream());
 
             // sends back updated NodeInfo to the new Node trying to connect.
-            Message joinMessage = new Message( newNode.getNodeInfo(), newNode.getCurrentNode(), 100, "" );
-            toNode.writeObject( joinMessage );
-            //System.out.println( "joinMessage sent successfully  " );
+            Message joinMessage = new Message(newNode.getNodeInfo(), newNode.getCurrentNode(), 100, "");
+            toNode.writeObject(joinMessage);
+            //System.out.println("joinMessage sent successfully  ");
 
-            //ObjectInputStream fromNode = new ObjectInputStream( inSocket.getInputStream() );
-            //System.out.println( "Instream created clientSide" );
+            //ObjectInputStream fromNode = new ObjectInputStream(inSocket.getInputStream());
+            //System.out.println("Instream created clientSide");
 
             //Message currentMessage = (Message) fromNode.readObject();
-            //newNode.updateMesh( currentMessage.getNodeInfo() );
-            //System.out.println( "join confirmation received" );
-            //System.out.println( newNode.nodeInfoToString() );
+            //newNode.updateMesh(currentMessage.getNodeInfo());
+            //System.out.println("join confirmation received");
+            //System.out.println(newNode.nodeInfoToString());
 
 
             //sendConfirmation(newNode.getNodeInfo(), newNode.getCurrentNode());
             //return currentMessage.getNodeInfo();
         }
-        catch ( Exception ex )
+        catch (Exception ex)
         {
             ex.printStackTrace();
         }
@@ -159,13 +146,13 @@ public class StartNode
                 {
                     //System.out.println("Trying to send confirmation to port: " + inNodeInfo.get(i)[1] + " " + inNodeInfo.get(i)[2]);
                     Socket sendSocket = new Socket(inNodeInfo.get(i)[1], Integer.parseInt(inNodeInfo.get(i)[2]));
-                    Message joinedMessage = new Message( inNodeInfo, currentNode, 110, "" );
-                    ObjectOutputStream toMesh = new ObjectOutputStream( sendSocket.getOutputStream() );
-                    toMesh.writeObject( joinedMessage );
+                    Message joinedMessage = new Message(inNodeInfo, currentNode, 110, "");
+                    ObjectOutputStream toMesh = new ObjectOutputStream(sendSocket.getOutputStream());
+                    toMesh.writeObject(joinedMessage);
                 }
             }
         }
-        catch ( Exception e )
+        catch (Exception e)
         {
             e.printStackTrace();
         }
