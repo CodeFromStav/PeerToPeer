@@ -18,24 +18,34 @@ public class StartNode
 
         try
         {
-
+            String inPort = args[0];
             // Letting user know of IP Address retrieval
-            /*System.out.println("Retrieving IP Address...");
+            System.out.println("Retrieving IP Address...");
 
             // Get the user's Hostname/IP address
-            userAddress = InetAddress.getLocalHost();
+            if (args[0] == null)
+            {
+                userAddress = InetAddress.getLocalHost();
+                // Split userAddress for IP Address
+                userAddressSplit = userAddress.toString().split("/");
 
-            // Split userAddress for IP Address
-            userAddressSplit = userAddress.toString().split("/");
+                // Converting String object of IP address to InetAddress object
+                userIP = InetAddress.getByName(userAddressSplit[1]);
 
-            // Converting String object of IP address to InetAddress object
-            userIP = InetAddress.getByName(userAddressSplit[1]);
+            }
+            else
+            {
+                userIP = InetAddress.getByName(args[0]);
+            }
+            //userAddress = InetAddress.getLocalHost();
+
+
 
             // Printing out user's IP Address to the screen
-            System.out.println("IP Address found! Your IP Address: " +
-                userAddressSplit[1]);*/
-            userAddress = InetAddress.getByName("127.0.0.1");
-            userIP = InetAddress.getByName("127.0.0.1");
+            //System.out.println("IP Address found! Your IP Address: " +
+                //userAddressSplit[1]);
+            //userAddress = InetAddress.getByName("127.0.0.1");
+            //userIP = InetAddress.getByName("127.0.0.1");
 
             // Ask user for their userName from terminal/cmd
             System.out.print("Please enter your userName: ");
@@ -56,7 +66,7 @@ public class StartNode
                 portNumber = 1024;
                 newNode = new Node( userName, userIP, portNumber );
                 newNode.addNodeData(newNode.getCurrentNode());
-                //System.out.println( newNode.nodeInfoToString() );
+                System.out.println( newNode.nodeInfoToString() );
                 printConfirmation(newNode);
                 newNode.startReceiver();
                 newNode.startSender();
