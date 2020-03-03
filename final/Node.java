@@ -108,4 +108,10 @@ public class Node
         }
         return "Current NodeInfo is " + infoToString;
     }
+    public void startSender()
+    {
+        Sender sendBoy = new Sender(nodeInfo, getCurrentNode(), this);
+        sendBoy.start();
+
+    }
 }

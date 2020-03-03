@@ -23,10 +23,19 @@ public class Sender extends MessageTypes implements Runnable
         {
             try
             {
+                nodeInfo = inNode.getNodeInfo();
                 messageBody = userInput.nextLine();
                 if (!messageBody.contains("leave"))
                 {
-
+                    Message msg = new Message(inNode.getNodeInfo(), inNode.getCurrentNode(), 110, messageBody);
+                    System.out.println(inNode.nodeInfoToString());
+                    sendMessage(msg, inNode.getNodeInfo());
+                }
+                else
+                {
+                    Message msg = new Message(inNode.getNodeInfo(), inNode.getCurrentNode(), 105, "");
+                    sendMessage(msg, inNode.getNodeInfo());
+                    System.out.println( "Goodbye " + currentNode[0] );
                 }
 
             }
@@ -44,6 +53,25 @@ public class Sender extends MessageTypes implements Runnable
         {
             currentThread = new Thread(this);
             currentThread.start();
+        }
+    }
+    public void sendMessage(Message msg, NodeInfo nodeInfo)
+    {
+        try
+        {
+            for (int i = 0; i < nodeInfo.getSize(); i++)
+            {
+                if (!nodeInfo.get(i)[2].equals(inNode.getCurrentNode()[2]))
+                {
+                    Socket toNode = new Socket(nodeInfo.get(i)[1], Integer.parseInt(nodeInfo.get(i)[2]));
+                    ObjectOutputStream out = new ObjectOutputStream( toNode.getOutputStream() );
+                    out.writeObject(msg);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 }

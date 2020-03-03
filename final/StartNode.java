@@ -59,6 +59,7 @@ public class StartNode
                 System.out.println( newNode.nodeInfoToString() );
                 printConfirmation(newNode);
                 newNode.startReceiver();
+                newNode.startSender();
             }
             else
             {
@@ -66,8 +67,10 @@ public class StartNode
                 newNode = new Node( userName, userIP, portNumber );
                 printConfirmation(newNode);
                 newNode.startReceiver();
-                newNode.updateMesh(getUpdatedInfo(activePort,newNode));
+                getUpdatedInfo(activePort,newNode);
+                newNode.startSender();
             }
+            //System.out.println("Goodbye " + newNode.getCurrentNode()[0]);
         }
 
         catch (IOException e)
@@ -108,7 +111,7 @@ public class StartNode
         }
         return null;
     }
-    public static NodeInfo getUpdatedInfo(Socket inSocket, Node newNode)
+    public static void getUpdatedInfo(Socket inSocket, Node newNode)
     {
         try
         {
@@ -117,25 +120,24 @@ public class StartNode
             // sends back updated NodeInfo to the new Node trying to connect.
             Message joinMessage = new Message( newNode.getNodeInfo(), newNode.getCurrentNode(), 100, "" );
             toNode.writeObject( joinMessage );
-            System.out.println( "joinMessage sent successfully  " );
+            //System.out.println( "joinMessage sent successfully  " );
 
-            ObjectInputStream fromNode = new ObjectInputStream( inSocket.getInputStream() );
-            System.out.println( "Instream created clientSide" );
+            //ObjectInputStream fromNode = new ObjectInputStream( inSocket.getInputStream() );
+            //System.out.println( "Instream created clientSide" );
 
-            Message currentMessage = (Message) fromNode.readObject();
-            newNode.updateMesh( currentMessage.getNodeInfo() );
-            System.out.println( "join confirmation received" );
-            System.out.println( newNode.nodeInfoToString() );
+            //Message currentMessage = (Message) fromNode.readObject();
+            //newNode.updateMesh( currentMessage.getNodeInfo() );
+            //System.out.println( "join confirmation received" );
+            //System.out.println( newNode.nodeInfoToString() );
 
 
             //sendConfirmation(newNode.getNodeInfo(), newNode.getCurrentNode());
-            return currentMessage.getNodeInfo();
+            //return currentMessage.getNodeInfo();
         }
         catch ( Exception ex )
         {
             ex.printStackTrace();
         }
-        return null;
     }
     public static void sendConfirmation(NodeInfo inNodeInfo, String[] currentNode)
     {
@@ -144,7 +146,7 @@ public class StartNode
             for (int i = 0; i < inNodeInfo.getSize(); i++) {
                 if (!inNodeInfo.get(i)[2].equals(currentNode[2]))
                 {
-                    System.out.println("Trying to send confirmation to port: " + inNodeInfo.get(i)[1] + " " + inNodeInfo.get(i)[2]);
+                    //System.out.println("Trying to send confirmation to port: " + inNodeInfo.get(i)[1] + " " + inNodeInfo.get(i)[2]);
                     Socket sendSocket = new Socket(inNodeInfo.get(i)[1], Integer.parseInt(inNodeInfo.get(i)[2]));
                     Message joinedMessage = new Message( inNodeInfo, currentNode, 110, "" );
                     ObjectOutputStream toMesh = new ObjectOutputStream( sendSocket.getOutputStream() );

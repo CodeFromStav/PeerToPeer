@@ -24,7 +24,7 @@ public class Receiver implements Runnable
                 while (true)
                 {
                     Socket serverClient = server.accept();
-                    System.out.println("hey sexy....");
+                    //System.out.println("hey sexy....");
                     ReceiverHelper inMessage = new ReceiverHelper(serverClient,nodeInfo,currentNode);
                     inMessage.start();
                 }

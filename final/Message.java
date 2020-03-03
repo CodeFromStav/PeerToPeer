@@ -15,7 +15,7 @@ public class Message implements Serializable
     }
     public String getMsg()
     {
-        return nodeInfo[1] + " says: " + messageBody;
+        return nodeInfo[0] + " says: " + messageBody;
     }
     public int getCode()
     {
