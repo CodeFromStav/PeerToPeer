@@ -1,3 +1,4 @@
+// Message for establishing message codes
 public class MessageTypes
 {
     //Initialize codes with arbritrary values
